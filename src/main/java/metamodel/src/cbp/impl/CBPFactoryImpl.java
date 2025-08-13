@@ -122,7 +122,7 @@ public class CBPFactoryImpl extends EFactoryImpl implements CBPFactory {
 	}
 
 	@Override
-	public AddToEReference createAddToEReference() {
+	public AddToEReferenceImpl createAddToEReference() {
 		return null;
 	}
 
