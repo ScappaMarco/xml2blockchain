@@ -58,32 +58,38 @@ public class CBPFactoryImpl extends EFactoryImpl implements CBPFactory {
 
 	@Override
 	public Register createRegister() {
-		return null;
+        RegisterImpl r = new RegisterImpl();
+        return r;
 	}
 
 	@Override
 	public Create createCreate() {
-		return null;
+		CreateImpl c = new CreateImpl();
+        return c;
 	}
 
 	@Override
 	public Delete createDelete() {
-		return null;
+		DeleteImpl d = new DeleteImpl();
+        return d;
 	}
 
 	@Override
 	public AddToResource createAddToResource() {
-		return null;
+		AddToResourceImpl are = new AddToResourceImpl();
+        return are;
 	}
 
 	@Override
 	public RemoveFromResource createRemoveFromResource() {
-		return null;
+		RemoveFromResourceImpl rfr = new RemoveFromResourceImpl();
+        return rfr;
 	}
 
 	@Override
 	public Value createValue() {
-		return null;
+		ValueImpl v = new ValueImpl();
+        return v;
 	}
 
 	@Override
@@ -93,51 +99,61 @@ public class CBPFactoryImpl extends EFactoryImpl implements CBPFactory {
 
 	@Override
 	public UnsetEAttribute createUnsetEAttribute() {
-		return null;
+		UnsetEAttributeImpl ua = new UnsetEAttributeImpl();
+        return ua;
 	}
 
 	@Override
 	public SetEReference createSetEReference() {
-		return null;
+		SetEReferenceImpl sr = new SetEReferenceImpl();
+        return sr;
 	}
 
 	@Override
 	public UnsetEReference createUnsetEReference() {
-		return null;
+		UnsetEReferenceImpl ur = new UnsetEReferenceImpl();
+        return ur;
 	}
 
 	@Override
 	public AddToEAttribute createAddToEAttribute() {
-		return null;
+        AddToEAttributeImpl aa = new AddToEAttributeImpl();
+        return aa;
 	}
 
 	@Override
 	public RemoveFromEAttribute createRemoveFromEAttribute() {
-		return null;
+		RemoveFromEAttributeImpl rfa = new RemoveFromEAttributeImpl();
+        return rfa;
 	}
 
 	@Override
 	public MoveInEAttribute createMoveInEAttribute() {
-		return null;
+		MoveInEAttributeImpl m = new MoveInEAttributeImpl();
+        return m;
 	}
 
 	@Override
 	public AddToEReferenceImpl createAddToEReference() {
-		return null;
-	}
+        AddToEReferenceImpl ar = new AddToEReferenceImpl();
+        return ar;
+    }
 
 	@Override
 	public RemoveFromEReference createRemoveFromEReference() {
-		return null;
+		RemoveFromEReferenceImpl rfr = new RemoveFromEReferenceImpl();
+        return rfr;
 	}
 
 	@Override
 	public MoveInEReference createMoveInEReference() {
-		return null;
+		MoveInEReferenceImpl m = new MoveInEReferenceImpl();
+        return m;
 	}
 
 	@Override
 	public CBPPackage getCBPPackage() {
-		return null;
+		CBPPackageImpl cbpp = new CBPPackageImpl();
+        return cbpp;
 	}
 }

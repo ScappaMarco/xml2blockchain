@@ -7,7 +7,7 @@ public interface MoveInEAttribute extends EObject {
 	void setFrom(String from);
 
 	String getTo();
-	String setTo(String to);
+	void setTo(String to);
 
 	String getName();
 	void setName(String getName);
