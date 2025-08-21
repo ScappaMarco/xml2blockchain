@@ -4,10 +4,11 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EObject;
 
 import java.util.List;
-public class AddToEReferenceEvent extends MultiValueEAttributeEvent implements EObjectValuesEvent {
 
-    @SuppressWarnings("unchecked")
+public class AddToEReferenceEvent extends MultiValueEReferenceEvent implements EObjectValuesEvent {
+
     @Override
+    @SuppressWarnings("unchecked")
     public void replay() {
         List<EObject> list = (List<EObject>) target.eGet(getEStructuralFeature());
         if (list instanceof BasicEList.UnmodifiableEList) {

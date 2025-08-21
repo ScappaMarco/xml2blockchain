@@ -4,7 +4,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import java.util.Collection;
 
-public class RemoveFromEReferenceEvent extends MultiValueEAttributeEvent implements EObjectValuesEvent {
+public class RemoveFromEReferenceEvent extends MultiValueEReferenceEvent implements EObjectValuesEvent {
 
     @SuppressWarnings("unchecked")
     @Override

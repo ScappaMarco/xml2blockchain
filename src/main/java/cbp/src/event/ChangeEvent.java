@@ -21,7 +21,7 @@ public abstract class ChangeEvent<T> {
         this.composite = composite;
     }
 
-    public Collection<? extends EObject> getValues() {
+    public Collection<T> getValues() {
         return values;
     }
 
