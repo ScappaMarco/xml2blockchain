@@ -1,6 +1,6 @@
 package cbp.src.event;
 
-public class DefaultChangeEventVisitor<T> extends IChangeEventVisitor<T> {
+public class DefaultChangeEventVisitor<T> implements IChangeEventVisitor<T> {
     @Override
     public T visit(AddToEAttributeEvent addToEAttributeEvent) {
         return null;
