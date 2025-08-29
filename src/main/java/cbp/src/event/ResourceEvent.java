@@ -1,5 +1,6 @@
 package cbp.src.event;
 
+import cbp.src.resource.CBPResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 

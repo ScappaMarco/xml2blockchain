@@ -50,11 +50,13 @@ public class CreateEObjectEvent extends EObjectEvent {
     public void replay() {
         this.eObject = eClass.getEPackage().getEFactoryInstance().create(eClass);
         this.setValue(this.eObject);
+        /*
         if(this.id == null) {
             resource.register(this.eObject);
         } else {
             resource.register(this.eObject, this.id);
         }
+         */
     }
 
     @Override

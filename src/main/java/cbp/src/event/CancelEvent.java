@@ -5,7 +5,6 @@ public class CancelEvent extends ChangeEvent<Object> {
     int lineToCancelOffset = 0;
 
     public CancelEvent() {
-
     }
 
     @Override
