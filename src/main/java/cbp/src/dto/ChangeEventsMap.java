@@ -9,16 +9,16 @@ import java.util.Map;
 
 public class ChangeEventsMap {
 
-    private Map<StartNewSessionEvent, List<ChangeEvent<?>>> changeEvents;
+    private Map<StartNewSessionEvent, List<ChangeEvent>> changeEvents;
     private Map<String, EClass> eObjectMap;
 
-    public ChangeEventsMap(Map<StartNewSessionEvent, List<ChangeEvent<?>>> changeEvents, Map<String, EClass> eObjectMap) {
+    public ChangeEventsMap(Map<StartNewSessionEvent, List<ChangeEvent>> changeEvents, Map<String, EClass> eObjectMap) {
         super();
         this.changeEvents = changeEvents;
         this.eObjectMap = eObjectMap;
     }
 
-    public Map<StartNewSessionEvent, List<ChangeEvent<?>>> getChangeEvents() {
+    public Map<StartNewSessionEvent, List<ChangeEvent>> getChangeEvents() {
         return this.changeEvents;
     }
 
@@ -26,7 +26,7 @@ public class ChangeEventsMap {
         return this.eObjectMap;
     }
 
-    public void setChangeEvents(Map<StartNewSessionEvent, List<ChangeEvent<?>>> changeEvents) {
+    public void setChangeEvents(Map<StartNewSessionEvent, List<ChangeEvent>> changeEvents) {
         this.changeEvents = changeEvents;
     }
 

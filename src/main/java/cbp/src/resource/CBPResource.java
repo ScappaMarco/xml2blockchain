@@ -1,5 +1,6 @@
 package cbp.src.resource;
 
+import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
 import cbp.src.event.ChangeEventAdapter;
 import org.eclipse.emf.common.util.EList;
@@ -18,6 +19,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import javax.xml.stream.FactoryConfigurationError;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -325,4 +327,6 @@ public abstract class CBPResource extends ResourceImpl {
     public void endCompositeEvent() {
         this.getChangeEventAdapter().endCompositeOperation();
     }
+
+    public abstract ChangeEventsMap replayEvents(InputStream inputStream) throws FactoryConfigurationError, IOException;
 }
