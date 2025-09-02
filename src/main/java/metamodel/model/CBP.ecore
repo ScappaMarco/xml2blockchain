@@ -20,12 +20,10 @@
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AddToResource">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="RemoveFromResource">
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="Value">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="literal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -34,8 +32,7 @@
     <eClassifiers xsi:type="ecore:EClass" name="SetEAttribute">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="UnsetEAttribute">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -44,8 +41,7 @@
     <eClassifiers xsi:type="ecore:EClass" name="SetEReference">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="UnsetEReference">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -55,42 +51,36 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="RemoveFromEAttribute">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MoveInEAttribute">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="to" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AddToEReference">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="RemoveFromEReference">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MoveInEReference">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="to" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value"
-                             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//Value" containment="true"/>
     </eClassifiers>
 </ecore:EPackage>

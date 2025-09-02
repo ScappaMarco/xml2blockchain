@@ -243,6 +243,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
 
                 if(event != null) {
                     if(event instanceof StartNewSessionEvent) {
+                        currentSession = (StartNewSessionEvent) event;
                         eventMap.put((StartNewSessionEvent) event, new ArrayList<>());
                     } else if(currentSession != null) {
                         eventMap.get(currentSession).add(event);
@@ -251,6 +252,12 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                     }
                 }
             }
+            begin.close();
+            end.close();
+            inputStream.close();
+            stream.close();
+            xmlEventReader.close();
+
             return new ChangeEventsMap(eventMap, eObjectMap);
         } catch (Exception e) {
             e.printStackTrace();
