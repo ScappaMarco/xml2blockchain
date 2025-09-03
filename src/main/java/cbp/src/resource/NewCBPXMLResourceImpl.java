@@ -91,7 +91,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     String sessionTime = e.getAttributeByName(new QName("time")).getValue();
                                     event = new StartNewSessionEvent(sessionId, sessionTime);
                                     currentSession = (StartNewSessionEvent) event;
-                                    System.out.println("Computing a session...");
+                                    //System.out.println("Computing a session...");
                                 }
                                 break;
                                 case "register": {
@@ -132,7 +132,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     eventino3.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino3.setName(e.getAttributeByName(new QName("name")).getValue().toString());
                                     event = eventino3;
-                                    System.out.println("Computing a add-to-ereference...");
+                                    //System.out.println("Computing a add-to-ereference...");
                                 }
                                 break;
                                 case "remove-from-ereference": {
@@ -147,7 +147,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     eventino.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino.setValue(e.getAttributeByName(new QName("name")).getValue().toString());
                                     event = eventino;
-                                    System.out.println("Computing a set-attribute...");
+                                    //System.out.println("Computing a set-attribute...");
                                 }
                                 break;
                                 case "set-ereference": {

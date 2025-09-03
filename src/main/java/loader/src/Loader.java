@@ -21,17 +21,21 @@ public class Loader {
     }
 
     private static void cbp2map() throws FactoryConfigurationError, IOException {
-        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2-small.cbpxml"));
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2.cbpxml"));
         System.out.println("Computing...");
-        ChangeEventsMap n = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2-small.cbpxml")));
+        long start = System.currentTimeMillis();
+        ChangeEventsMap n = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
+        long end = System.currentTimeMillis();
+        System.out.println("The parsing took "  + (end - start) + "ms (milliseconds)");
 
         //test and debug
-        /*
+        System.out.println("Parsing visualization: ");
         Map<StartNewSessionEvent, List<ChangeEvent>> result = n.getChangeEvents();
-        System.out.println("How many sessions? The are " + result.size() + " session");
+        System.out.println("Session(s): " + result.size());
 
+        /*
         for(Map.Entry<StartNewSessionEvent, List<ChangeEvent>> entry : result.entrySet()) {
-            System.out.println("Chiave = " + entry.getKey().getSessionId() + ", Valore = " + entry.getValue());
+            System.out.println("Session ID: " + entry.getKey().getSessionId() + ", Events: " + entry.getValue());
         }
 
          */
