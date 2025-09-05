@@ -40,4 +40,8 @@ public class Loader {
 
          */
     }
+
+    public static void mapInBlockchain(ChangeEventsMap changeEventsMap) {
+        //...
+    }
 }
