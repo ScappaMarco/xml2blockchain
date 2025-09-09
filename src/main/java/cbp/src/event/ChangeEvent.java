@@ -1,7 +1,5 @@
 package cbp.src.event;
 
-import org.eclipse.emf.ecore.EObject;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -88,6 +86,8 @@ public abstract class ChangeEvent<T> {
     public abstract void replay();
 
     public abstract <U> U accept(IChangeEventVisitor<U> visitor);
+
+    //public abstract List<?> getEventAttributes();
 
     public ChangeEvent<?> reverse(){
         this.setComposite(null);

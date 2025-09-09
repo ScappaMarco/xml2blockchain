@@ -5,11 +5,68 @@ import org.hyperledger.fabric.gateway.Identity;
 import org.hyperledger.fabric.gateway.Wallet;
 import org.hyperledger.fabric.gateway.Wallets;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.security.PrivateKey;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 public class WalletManager {
 
+    private String walletPath;
+    private String certificatePath;
+    private String keyPAth;
+
+    public WalletManager(String walletPath, String certificatePath, String keyPAth) {
+        this.walletPath = walletPath;
+        this.certificatePath = certificatePath;
+        this.keyPAth = keyPAth;
+    }
+
+    public String getWalletPath() {
+        return this.walletPath;
+    }
+
+    public void setWalletPath(String newWalletPath) {
+        this.walletPath = newWalletPath;
+    }
+
+    public String getCertificatePath() {
+        return this.certificatePath;
+    }
+
+    public void setCertificatePath(String newCertificatePath) {
+        this.certificatePath = newCertificatePath;
+    }
+
+    public String getKeyPAth() {
+        return this.keyPAth;
+    }
+
+    public void setKeyPAth(String newKeyPath) {
+        this.keyPAth = newKeyPath;
+    }
+
+    public void initialize() throws IOException, CertificateException, InvalidKeyException {
+        Path walletPath = Paths.get(this.getWalletPath());
+        Wallet wallet = Wallets.newFileSystemWallet(walletPath);
+
+        String userId = "appUser";
+        if(wallet.get(userId) != null) {
+            return;
+        }
+
+        Path certPath = Paths.get(this.getCertificatePath());
+        Path keyPath = Paths.get(this.getKeyPAth());
+
+        X509Certificate certificate = Identities.readX509Certificate(Files.newBufferedReader(certPath));
+        PrivateKey privateKey = Identities.readPrivateKey(Files.newBufferedReader(keyPath));
+
+        Identity identity = Identities.newX509Identity("Org1MSP", certificate, privateKey);
+
+        wallet.put(userId, identity);
+    }
 }
