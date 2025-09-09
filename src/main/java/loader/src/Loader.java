@@ -6,11 +6,14 @@ import cbp.src.event.StartNewSessionEvent;
 import cbp.src.resource.CBPXMLResourceFactory;
 import cbp.src.resource.NewCBPXMLResourceImpl;
 import org.eclipse.emf.common.util.URI;
+import wallet.WalletManager;
 
 import javax.xml.stream.FactoryConfigurationError;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +21,7 @@ public class Loader {
 
     public static void main(String[] args) throws FactoryConfigurationError, IOException {
         cbp2map();
+        //mapInBlockchain();
     }
 
     private static void cbp2map() throws FactoryConfigurationError, IOException {
@@ -41,7 +45,8 @@ public class Loader {
          */
     }
 
-    public static void mapInBlockchain(ChangeEventsMap changeEventsMap) {
-        //...
+    public static void mapInBlockchain(ChangeEventsMap changeEventsMap) throws CertificateException, IOException, InvalidKeyException {
+        //WalletManager w = new WalletManager("");
+        //w.initialize();
     }
 }

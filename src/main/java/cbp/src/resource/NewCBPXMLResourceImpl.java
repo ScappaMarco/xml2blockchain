@@ -120,7 +120,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                 }
                                 break;
                                 case "add-to-resource": {
+                                    int position = Integer.parseInt(e.getAttributeByName(new QName("position")).getValue());
                                     event = new AddToResourceEvent();
+                                    event.setPosition(position);
                                 }
                                 break;
                                 case "remove-from-resource": {
@@ -131,6 +133,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     AddToEReferenceEvent eventino3 = new AddToEReferenceEvent();
                                     eventino3.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino3.setName(e.getAttributeByName(new QName("name")).getValue().toString());
+                                    eventino3.setPosition(Integer.parseInt(e.getAttributeByName(new QName("position")).getValue()));
                                     event = eventino3;
                                     //System.out.println("Computing a add-to-ereference...");
                                 }
@@ -139,6 +142,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     RemoveFromEReferenceEvent eventino4 = new RemoveFromEReferenceEvent();
                                     eventino4.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino4.setName(e.getAttributeByName(new QName("name")).getValue().toString());
+                                    eventino4.setPosition(Integer.parseInt(e.getAttributeByName(new QName("position")).getValue()));
                                     event = eventino4;
                                 }
                                 break;
@@ -196,6 +200,8 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     MoveWithinEReferenceEvent eventino10 = new MoveWithinEReferenceEvent();
                                     eventino10.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino10.setName(e.getAttributeByName(new QName("name")).getValue());
+                                    eventino10.setFromPosition(Integer.parseInt(e.getAttributeByName(new QName("from")).getValue()));
+                                    eventino10.setToPosition(Integer.parseInt(e.getAttributeByName(new QName("to")).getValue()));
                                     event = eventino10;
                                 }
                                 break;
