@@ -1,5 +1,7 @@
 package loader.src;
 
+import blockchain.src.BlockChainServiceFactory;
+import blockchain.src.BlockChainServiceImpl;
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
 import cbp.src.event.StartNewSessionEvent;
@@ -25,28 +27,27 @@ public class Loader {
     }
 
     private static void cbp2map() throws FactoryConfigurationError, IOException {
-        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2.cbpxml"));
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2-smaller.cbpxml"));
         System.out.println("Computing...");
         long start = System.currentTimeMillis();
-        ChangeEventsMap n = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
+        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2-smaller.cbpxml")));
         long end = System.currentTimeMillis();
         System.out.println("The parsing took "  + (end - start) + "ms (milliseconds)");
 
-        //test and debug
         System.out.println("Parsing visualization: ");
-        Map<StartNewSessionEvent, List<ChangeEvent>> result = n.getChangeEvents();
-        System.out.println("Session(s): " + result.size());
+        Map<StartNewSessionEvent, List<ChangeEvent>> result = changeEventsMap.getChangeEvents();
 
-        /*
+        //test and debug
+        System.out.println("Session(s): " + result.size());
         for(Map.Entry<StartNewSessionEvent, List<ChangeEvent>> entry : result.entrySet()) {
             System.out.println("Session ID: " + entry.getKey().getSessionId() + ", Events: " + entry.getValue());
         }
 
-         */
+        BlockChainServiceImpl blockChainService = new BlockChainServiceFactory().createService();
+        blockChainService.saveModelToBlockchain(changeEventsMap);
     }
 
     public static void mapInBlockchain(ChangeEventsMap changeEventsMap) throws CertificateException, IOException, InvalidKeyException {
-        //WalletManager w = new WalletManager("");
-        //w.initialize();
+
     }
 }

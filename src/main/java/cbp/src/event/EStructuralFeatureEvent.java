@@ -7,6 +7,7 @@ public abstract class EStructuralFeatureEvent<T> extends ChangeEvent<T> {
 
     protected EStructuralFeature eStructuralFeature;
     protected EObject target = null;
+    protected String targetId;
 
     public EStructuralFeature getEStructuralFeature() {
         return eStructuralFeature;
@@ -27,5 +28,13 @@ public abstract class EStructuralFeatureEvent<T> extends ChangeEvent<T> {
 
     public void setTarget(EObject target) {
         this.target = target;
+    }
+
+    public String getTargetId() {
+        return this.targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 }

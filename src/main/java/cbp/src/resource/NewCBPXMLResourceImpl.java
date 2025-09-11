@@ -2,14 +2,12 @@ package cbp.src.resource;
 
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.*;
-import org.checkerframework.checker.units.qual.Angle;
-import org.checkerframework.checker.units.qual.N;
-import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.*;
+import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
@@ -23,6 +21,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
 
     protected int persistedEvents = 0;
     private boolean optimised;
+    private Map<String, EClass> eObjectMap = new HashMap<>();
 
     public NewCBPXMLResourceImpl() {
         super();
@@ -53,8 +52,6 @@ public class NewCBPXMLResourceImpl extends CBPResource {
 
             ChangeEvent<?> event = null;
             boolean ignore = false;
-
-            Map<String, EClass> eObjectMap = new HashMap<>();
 
             //TreeMap with comparator -> guaranteed session order (ordered by session-id, lowest to highest)
             //session-id: BPMN2-0000001
@@ -120,13 +117,18 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                 }
                                 break;
                                 case "add-to-resource": {
-                                    int position = Integer.parseInt(e.getAttributeByName(new QName("position")).getValue());
-                                    event = new AddToResourceEvent();
-                                    event.setPosition(position);
+                                    AddToResourceEvent eventino02 = new AddToResourceEvent();
+                                    eventino02.setPosition(Integer.parseInt(e.getAttributeByName(new QName("position")).getValue()));
+
+                                    this.setValueId(eventino02, xmlEventReader, "add-to-resource", "eobject");
+                                    event = eventino02;
                                 }
                                 break;
                                 case "remove-from-resource": {
-                                    event = new RemoveFromResourceEvent();
+                                    RemoveFromResourceEvent eventino11 = new RemoveFromResourceEvent();
+
+                                    this.setValueId(eventino11, xmlEventReader, "remove-from-resource", "eobject");
+                                    event = eventino11;
                                 }
                                 break;
                                 case "add-to-ereference": {
@@ -134,6 +136,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     eventino3.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino3.setName(e.getAttributeByName(new QName("name")).getValue().toString());
                                     eventino3.setPosition(Integer.parseInt(e.getAttributeByName(new QName("position")).getValue()));
+                                    eventino3.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino3, xmlEventReader, "add-to-ereference", "eobject");
                                     event = eventino3;
                                     //System.out.println("Computing a add-to-ereference...");
                                 }
@@ -142,7 +147,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     RemoveFromEReferenceEvent eventino4 = new RemoveFromEReferenceEvent();
                                     eventino4.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino4.setName(e.getAttributeByName(new QName("name")).getValue().toString());
-                                    eventino4.setPosition(Integer.parseInt(e.getAttributeByName(new QName("position")).getValue()));
+                                    eventino4.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino4, xmlEventReader, "remove-from-ereference", "eobject");
                                     event = eventino4;
                                 }
                                 break;
@@ -150,6 +157,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     SetEAttributeEvent eventino = new SetEAttributeEvent();
                                     eventino.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino.setValue(e.getAttributeByName(new QName("name")).getValue().toString());
+                                    eventino.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino, xmlEventReader, "set-eattribute", "literal");
                                     event = eventino;
                                     //System.out.println("Computing a set-attribute...");
                                 }
@@ -158,6 +168,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     SetEReferenceEvent eventino2 = new SetEReferenceEvent();
                                     eventino2.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino2.setName(e.getAttributeByName(new QName("name")).getValue());
+                                    eventino2.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino2, xmlEventReader, "set-ereference", "eobject");
                                     event = eventino2;
                                 }
                                 break;
@@ -165,6 +178,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     UnsetEAttributeEvent eventino5 = new UnsetEAttributeEvent();
                                     eventino5.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino5.setName(e.getAttributeByName(new QName("name")).getValue());
+                                    eventino5.setTargetId(e.getAttributeByName(new QName("target")).getValue());
                                     event = eventino5;
                                 }
                                 break;
@@ -172,6 +186,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     UnsetEReferenceEvent eventino6 = new UnsetEReferenceEvent();
                                     eventino6.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino6.setName(e.getAttributeByName(new QName("name")).getValue());
+                                    eventino6.setTargetId(e.getAttributeByName(new QName("target")).getValue());
                                     event = eventino6;
                                 }
                                 break;
@@ -179,6 +194,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     AddToEAttributeEvent eventino7 = new AddToEAttributeEvent();
                                     eventino7.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino7.setName(e.getAttributeByName(new QName("name")).getValue());
+                                    eventino7.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino7, xmlEventReader, "add-to-eattribute", "literal");
                                     event = eventino7;
                                 }
                                 break;
@@ -186,6 +204,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     RemoveFromEAttributeEvent eventino8 = new RemoveFromEAttributeEvent();
                                     eventino8.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino8.setName(e.getAttributeByName(new QName("name")).getValue());
+                                    eventino8.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino8, xmlEventReader, "remove-from-eattribute", "literal");
                                     event = eventino8;
                                 }
                                 break;
@@ -193,6 +214,11 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     MoveWithinEAttributeEvent eventino9 = new MoveWithinEAttributeEvent();
                                     eventino9.setTarget(eObjectMap.get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino9.setName(e.getAttributeByName(new QName("name")).getValue());
+                                    eventino9.setFromPosition(Integer.parseInt(e.getAttributeByName(new QName("from")).getValue()));
+                                    eventino9.setToPosition(Integer.parseInt(e.getAttributeByName(new QName("target")).getValue()));
+                                    eventino9.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino9, xmlEventReader, "move-in-eattribute", "literal");
                                     event = eventino9;
                                 }
                                 break;
@@ -202,6 +228,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     eventino10.setName(e.getAttributeByName(new QName("name")).getValue());
                                     eventino10.setFromPosition(Integer.parseInt(e.getAttributeByName(new QName("from")).getValue()));
                                     eventino10.setToPosition(Integer.parseInt(e.getAttributeByName(new QName("to")).getValue()));
+                                    eventino10.setTargetId(e.getAttributeByName(new QName("target")).getValue());
+
+                                    this.setValueId(eventino10, xmlEventReader, "move-in-ereference", "eobject");
                                     event = eventino10;
                                 }
                                 break;
@@ -274,6 +303,29 @@ public class NewCBPXMLResourceImpl extends CBPResource {
             e.printStackTrace();
             System.out.println("Error: event number " + eventNumber + " : " + errorMessage);
             throw new IOException("Error: Event Number " + eventNumber + " : " + errorMessage + "\n" + e.toString() + "\n");
+        }
+    }
+
+    private void setValueId(ChangeEvent event, XMLEventReader xmlEventReader, String eventName, String attName) throws XMLStreamException {
+        while(xmlEventReader.hasNext()) {
+            XMLEvent innerEvent = xmlEventReader.peek();
+            if(innerEvent.isStartElement() && innerEvent.asStartElement().getName().getLocalPart().equals("value")) {
+                StartElement valueElem = xmlEventReader.nextEvent().asStartElement();
+                Attribute eobjectAttribute = valueElem.getAttributeByName(new QName(attName));
+                if(eobjectAttribute != null) {
+                    String value = eobjectAttribute.getValue();
+                    event.setValueId(value);
+                    event.setValue(eObjectMap.get(value));
+                    break;
+                } else {
+                    event.setValueId(null);
+                    event.setValue(null);
+                }
+            } else if(innerEvent.isEndElement() && innerEvent.asEndElement().getName().equals(eventName)) {
+                break;
+            } else {
+                xmlEventReader.nextEvent();
+            }
         }
     }
 }

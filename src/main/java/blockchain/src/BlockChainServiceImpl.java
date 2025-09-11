@@ -18,6 +18,8 @@ public class BlockChainServiceImpl implements BlockChainService {
     @Override
     public void saveModelToBlockchain(ChangeEventsMap map) {
         List<String> changeEventStringList = this.serializeChangeEventMap(map.getChangeEvents());
+        //System.out.println(changeEventStringList);
+        System.out.println("Number of serialized session(s): " + changeEventStringList.size());
         for(String s : changeEventStringList) {
             //TODO for loop to add every String as a Block in the blockchain
         }

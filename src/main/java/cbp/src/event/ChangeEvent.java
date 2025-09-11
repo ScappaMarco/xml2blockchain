@@ -10,6 +10,7 @@ public abstract class ChangeEvent<T> {
 
     protected int position = -1;
     protected String composite = null;
+    private String valueId;
 
     public String getComposite() {
         return composite;
@@ -100,5 +101,13 @@ public abstract class ChangeEvent<T> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getValueId() {
+        return this.valueId;
+    }
+
+    public void setValueId(String valueId) {
+        this.valueId = valueId;
     }
 }

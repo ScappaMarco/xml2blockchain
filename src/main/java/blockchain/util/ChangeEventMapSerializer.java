@@ -21,13 +21,21 @@ public class ChangeEventMapSerializer {
 
         for(Map.Entry<StartNewSessionEvent, List<ChangeEvent>> entry : eventListMap.entrySet()) {
             try {
-                wrapper.put("session", entry.getKey());
-                wrapper.put("events", entry.getValue());
-
-                serializedChangeEvent = mapper.writeValueAsString(wrapper);
+                if(entry.getKey() != null) {
+                    if(entry.getValue().size() > 0) {
+                        wrapper.put("session", entry.getKey());
+                        wrapper.put("events", entry.getValue());
+                        System.out.println("TRYING TO SERIALIZE: " + entry.getKey().getSessionId() + ". EVENT LIST SIZE: " + entry.getValue().size());
+                        serializedChangeEvent = mapper.writeValueAsString(wrapper);
+                    } else {
+                        System.out.println("TRYING TO SERIALIZE: " + entry.getKey().getSessionId());
+                        serializedChangeEvent = mapper.writeValueAsString(entry.getKey());
+                    }
+                }
+                System.out.println(serializedChangeEvent);
                 result.add(serializedChangeEvent);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException("Change Event serializing error: " + entry.getKey().getSessionId());
+                throw new RuntimeException("ERROR: Change Event serializing error: " + entry.getKey().getSessionId());
             }
         }
         return result;
