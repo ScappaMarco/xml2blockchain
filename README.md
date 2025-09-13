@@ -1,1 +1,11 @@
 # xml2blockchain
+## Technic specifications
+The project _"xml2blockchain"_ aims to parse and save a model into a BlockChain. The project is divided in two main process groups:
+- *Parsing*: the first part of the project is to parse a CBP (Change Based Persistence) file into a iterable data structure. The file (BPMN2.cbpxml) contains some instructions executed onto a model (for example create a node, adding some attributes, changing them value, or adding a reference to another node). In this first step we aim to parse those instructions into, as said before, an iterable Java data structure, so that we can (in the following step) save those instance of the specified instructions into a BlockChain.
+- *Saving*: the second main step is to save the data in the Java data structure in a BlockChain: in this regard, we are going to use the SDK provided by Hyperladger Fabric (https://hyperledger-fabric.readthedocs.io/en/release-2.5/index.html). Tis SDK (https://hyperledger.github.io/fabric-gateway-java/) allows us to save our model in BlockChain. More precisely, we are going to save every session of events (ChangeEvent) as an independent block in the BlockChain: every block will have an ID (build like so: "block{id}) that is going to be used to get the information relating to that block.
+
+To save the data in the Java data structure in the BlockChain we have to alter our data format: we currently have some sort of List of those events, but we need to alter those data to be able to send them in the BlockChain, in particular, we need to transform those Lists in strings
+- in this regard, we can use Jackson (https://github.com/FasterXML/jackson) to transform our data in JSON and than in strings.
+
+## BlockChain Specification
+
