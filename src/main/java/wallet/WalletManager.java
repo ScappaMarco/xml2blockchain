@@ -18,12 +18,12 @@ public class WalletManager {
 
     private String walletPath;
     private String certificatePath;
-    private String keyPAth;
+    private String keyPath;
 
-    public WalletManager(String walletPath, String certificatePath, String keyPAth) {
+    public WalletManager(String walletPath, String certificatePath, String keyPath) {
         this.walletPath = walletPath;
         this.certificatePath = certificatePath;
-        this.keyPAth = keyPAth;
+        this.keyPath = keyPath;
     }
 
     public String getWalletPath() {
@@ -42,12 +42,12 @@ public class WalletManager {
         this.certificatePath = newCertificatePath;
     }
 
-    public String getKeyPAth() {
-        return this.keyPAth;
+    public String getKeyPath() {
+        return this.keyPath;
     }
 
     public void setKeyPAth(String newKeyPath) {
-        this.keyPAth = newKeyPath;
+        this.keyPath = newKeyPath;
     }
 
     public void initialize() throws IOException, CertificateException, InvalidKeyException {
@@ -60,7 +60,7 @@ public class WalletManager {
         }
 
         Path certPath = Paths.get(this.getCertificatePath());
-        Path keyPath = Paths.get(this.getKeyPAth());
+        Path keyPath = Paths.get(this.getKeyPath());
 
         X509Certificate certificate = Identities.readX509Certificate(Files.newBufferedReader(certPath));
         PrivateKey privateKey = Identities.readPrivateKey(Files.newBufferedReader(keyPath));

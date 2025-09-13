@@ -21,12 +21,11 @@ import java.util.Map;
 
 public class Loader {
 
-    public static void main(String[] args) throws FactoryConfigurationError, IOException {
+    public static void main(String[] args) throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
         cbp2map();
-        //mapInBlockchain();
     }
 
-    private static void cbp2map() throws FactoryConfigurationError, IOException {
+    private static void cbp2map() throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
         NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2-smaller.cbpxml"));
         System.out.println("Computing...");
         long start = System.currentTimeMillis();
@@ -43,11 +42,11 @@ public class Loader {
             System.out.println("Session ID: " + entry.getKey().getSessionId() + ", Events: " + entry.getValue());
         }
 
-        BlockChainServiceImpl blockChainService = new BlockChainServiceFactory().createService();
-        blockChainService.saveModelToBlockchain(changeEventsMap);
+        mapInBlockchain(changeEventsMap);
     }
 
     public static void mapInBlockchain(ChangeEventsMap changeEventsMap) throws CertificateException, IOException, InvalidKeyException {
-
+        BlockChainServiceImpl blockChainService = new BlockChainServiceFactory().createService();
+        blockChainService.saveModelToBlockchain(changeEventsMap);
     }
 }

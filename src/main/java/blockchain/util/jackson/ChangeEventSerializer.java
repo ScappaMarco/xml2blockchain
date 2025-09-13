@@ -18,7 +18,7 @@ public class ChangeEventSerializer extends JsonSerializer<ChangeEvent> {
             gen.writeStringField("type", "session");
             gen.writeStringField("id", ((StartNewSessionEvent) event).getSessionId());
             gen.writeStringField("author", "user");
-            gen.writeStringField("time", ((StartNewSessionEvent) event).getTime());
+            gen.writeStringField("timestamp", ((StartNewSessionEvent) event).getTime());
         } else if(event instanceof RegisterEPackageEvent) {
             //System.out.println("serializing a register Epackage");
             gen.writeStringField("type", "register");
