@@ -5,8 +5,6 @@ import org.hyperledger.fabric.gateway.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 
 public class FabricConnector {
 
@@ -34,7 +32,7 @@ public class FabricConnector {
             Identity identity = wallet.get("appUser");
             if(identity instanceof X509Identity) {
                 X509Identity x509Identity = (X509Identity) identity;
-                System.out.println("MSP ID: " + x509Identity.getMspId() + "-----------------------------------");
+                System.out.println("MSP ID: " + x509Identity.getMspId());
                 System.out.println("CERTIFICATE SUBJECT: " + x509Identity.getCertificate().getSubjectDN());
             }
         } catch (Exception e) {
