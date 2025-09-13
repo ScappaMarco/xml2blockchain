@@ -60,9 +60,9 @@ public class Loader {
             eventBlockList = blockChainService.getBlock("block1");
             if(eventBlockList != null) {
                 System.out.println("CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
-                System.out.print(eventBlockList);
+                System.out.println(eventBlockList);
             } else {
-                System.out.print("ERROR: event list null");
+                System.out.println("ERROR: event list null");
             }
         }  else if(changeEventsMap.getChangeEvents().isEmpty()) {
             System.out.println("The model has no entry to select from");
@@ -76,11 +76,11 @@ public class Loader {
             } else {
                 eventBlockList = blockChainService.getBlock("block" + (blockChoice));
                 if (eventBlockList != null) {
-                    System.out.print("The data of the Block with the ID " + (blockChoice) + " has been taken");
+                    System.out.println("The data of the Block with the ID " + (blockChoice) + " has been taken");
                     System.out.println("CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
-                    System.out.print(eventBlockList);
+                    System.out.println(eventBlockList);
                 } else {
-                    System.out.print("ERROR: event list null");
+                    System.out.println("ERROR: event list null");
                 }
             }
         }

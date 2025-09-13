@@ -4,7 +4,6 @@ import blockchain.util.ChangeEventMapSerializer;
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
 import cbp.src.event.StartNewSessionEvent;
-import org.eclipse.emf.ecore.xmi.impl.XMIHandler;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 import wallet.WalletManager;
@@ -29,7 +28,7 @@ public class BlockChainServiceImpl implements BlockChainService {
     @Override
     public void saveModelToBlockchain(ChangeEventsMap map) throws IOException {
         try {
-            Contract contract = this.fabricConnect("/home/marco/Desktop/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
+            Contract contract = this.fabricConnect("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
             long serializationStart = System.currentTimeMillis();
             List<String> changeEventStringList = this.serializeChangeEventMap(map.getChangeEvents());
             long serializationEnd = System.currentTimeMillis();
@@ -63,7 +62,7 @@ public class BlockChainServiceImpl implements BlockChainService {
         List<ChangeEvent> resultArrayList = null;
 
         try {
-            Contract contract = this.fabricConnect("/home/marco/Desktop/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
+            Contract contract = this.fabricConnect("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
             byte[] resultByteArray = contract.evaluateTransaction("ReadBlock", blockId);
 
             if(resultByteArray == null || resultByteArray.length == 0) {
@@ -84,8 +83,8 @@ public class BlockChainServiceImpl implements BlockChainService {
 
     private Contract fabricConnect(String networkConfigStringPAth) throws IOException {
         this.inizializeWallet("src/main/resources/wallet",
-                "/home/marco/Desktop/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore",
-                "/home/marco/Desktop//fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/cert.pem");
+                "../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore",
+                "../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/cert.pem");
         try {
             // /home/marco/Desktop/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml
             return FabricConnector.connect(networkConfigStringPAth);
@@ -98,12 +97,12 @@ public class BlockChainServiceImpl implements BlockChainService {
         Path walletPath= Paths.get(walletPathString);
         if(Files.list(walletPath).findAny().isEmpty()) {
             System.out.println("The Wallet manager is being initialized");
-            Path keyPath = Files.list(Paths.get("/home/marco/Desktop/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore"))
+            Path keyPath = Files.list(Paths.get("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore"))
                     .findFirst().orElseThrow(() -> new RuntimeException("No KEY found in /keystore directory"));
 
             WalletManager manager = new WalletManager(
                     walletPath.toString(),
-                    "/home/marco/Desktop//fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/cert.pem",
+                    "../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/cert.pem",
                     keyPath.toString()
             );
             try {
