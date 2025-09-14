@@ -51,10 +51,10 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                 switch (eventType) {
                     case "register": {
                         String packageName = eNode.get("name").asText();
-                        event.setName(packageName);
                         EPackage ePackage = EcoreFactory.eINSTANCE.createEPackage();
                         ePackage.setName(packageName);
                         event = new RegisterEPackageEvent(ePackage, new ChangeEventAdapter(new NewCBPXMLResourceImpl()));
+                        event.setName(packageName);
                     }
                     break;
 
@@ -66,7 +66,6 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                         eObjectMap.put(id, eclass);
                         eclass.setName(className);
                         event = new CreateEObjectEvent(eclass, id);
-                        ((CreateEObjectEvent) event).setePackage(ePackageName);
                     }
                     break;
 
@@ -79,16 +78,22 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "add-to-resource": {
                         AddToResourceEvent ev1 = new AddToResourceEvent();
                         ev1.setPosition(eNode.get("position").asInt());
-                        ev1.setValueId(eNode.get("value").asText());
-                        ev1.setValue(eObjectMap.get(eNode.get("value").asText()));
+                        JsonNode valueNode = eNode.get("value");
+                        if(valueNode != null) {
+                            ev1.setValueId(valueNode.asText());
+                            ev1.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev1;
                     }
                     break;
 
                     case "remove-from-resource": {
                         RemoveFromResourceEvent ev2 = new RemoveFromResourceEvent();
-                        ev2.setValueId(eNode.get("value").asText());
-                        ev2.setValue(eObjectMap.get(eNode.get("value").asText()));
+                        JsonNode valueNode = eNode.get("value");
+                        if(valueNode != null) {
+                            ev2.setValueId(valueNode.asText());
+                            ev2.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev2;
 
                     }
@@ -98,10 +103,16 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                         AddToEReferenceEvent ev3 = new AddToEReferenceEvent();
                         ev3.setName(eNode.get("name").asText());
                         ev3.setPosition(eNode.get("position").asInt());
-                        ev3.setTargetId(eNode.get("target-id").asText());
-                        ev3.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev3.setValueId(eNode.get("value").asText());
-                        ev3.setValue(eObjectMap.get(eNode.get("value").asText()));
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev3.setTargetId(targetNode.asText());
+                            ev3.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev3.setValueId(valueNode.asText());
+                            ev3.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev3;
                     }
                     break;
@@ -109,10 +120,17 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "remove-from-ereference": {
                         RemoveFromEReferenceEvent ev4 = new RemoveFromEReferenceEvent();
                         ev4.setName(eNode.get("name").asText());
-                        ev4.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev4.setTargetId(eNode.get("target-id").asText());
-                        ev4.setValueId(eNode.get("value").asText());
-                        ev4.setValue(eObjectMap.get(eNode.get("value").asText()));
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev4.setTargetId(targetNode.asText());
+                            ev4.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev4.setValueId(valueNode.asText());
+                            ev4.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev4;
                     }
                     break;
@@ -120,10 +138,17 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "set-eattribute": {
                         SetEAttributeEvent ev5 = new SetEAttributeEvent();
                         ev5.setName(eNode.get("name").asText());
-                        ev5.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev5.setTargetId(eNode.get("target-id").asText());
-                        ev5.setValue(eObjectMap.get(eNode.get("value").asText()));
-                        ev5.setValueId(eNode.get("value").asText());
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev5.setTargetId(targetNode.asText());
+                            ev5.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev5.setValueId(valueNode.asText());
+                            ev5.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev5;
                     }
                     break;
@@ -131,10 +156,17 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "set-ereference": {
                         SetEReferenceEvent ev6 = new SetEReferenceEvent();
                         ev6.setName(eNode.get("name").asText());
-                        ev6.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev6.setTargetId(eNode.get("target-id").asText());
-                        ev6.setValue(eObjectMap.get(eNode.get("value").asText()));
-                        ev6.setValueId(eNode.get("value").asText());
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev6.setTargetId(targetNode.asText());
+                            ev6.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev6.setValueId(valueNode.asText());
+                            ev6.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev6;
                     }
                     break;
@@ -142,8 +174,12 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "unset-eattribute": {
                         UnsetEAttributeEvent ev7 = new UnsetEAttributeEvent();
                         ev7.setName(eNode.get("name").asText());
-                        ev7.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev7.setTargetId(eNode.get("target-id").asText());
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        if(targetNode != null) {
+                            ev7.setTargetId(targetNode.asText());
+                            ev7.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
                         event = ev7;
                     }
                     break;
@@ -151,8 +187,12 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "unset-ereference": {
                         UnsetEReferenceEvent ev8 = new UnsetEReferenceEvent();
                         ev8.setName(eNode.get("name").asText());
-                        ev8.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev8.setTargetId(eNode.get("target-id").asText());
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        if(targetNode != null) {
+                            ev8.setTargetId(targetNode.asText());
+                            ev8.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
                         event = ev8;
                     }
                     break;
@@ -160,10 +200,17 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "add-to-eattribute": {
                         AddToEAttributeEvent ev9 = new AddToEAttributeEvent();
                         ev9.setName(eNode.get("name").asText());
-                        ev9.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev9.setTargetId(eNode.get("target-id").asText());
-                        ev9.setValue(eObjectMap.get(eNode.get("value").asText()));
-                        ev9.setValueId(eNode.get("value").asText());
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev9.setTargetId(targetNode.asText());
+                            ev9.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev9.setValueId(valueNode.asText());
+                            ev9.setValue(eObjectMap.get(valueNode.asText()));
+                        };
                         event = ev9;
                     }
                     break;
@@ -171,10 +218,17 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "remove-from-eattribute": {
                         RemoveFromEAttributeEvent ev10 = new RemoveFromEAttributeEvent();
                         ev10.setName(eNode.get("name").asText());
-                        ev10.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev10.setTargetId(eNode.get("target-id").asText());
-                        ev10.setValue(eObjectMap.get(eNode.get("value").asText()));
-                        ev10.setValueId(eNode.get("value").asText());
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev10.setTargetId(targetNode.asText());
+                            ev10.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev10.setValueId(valueNode.asText());
+                            ev10.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev10;
                     }
                     break;
@@ -182,12 +236,27 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "move-in-ereference": {
                         MoveWithinEReferenceEvent ev11 = new MoveWithinEReferenceEvent();
                         ev11.setName(eNode.get("name").asText());
-                        ev11.setFromPosition(eNode.get("from").asInt());
-                        ev11.setToPosition(eNode.get("to").asInt());
-                        ev11.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev11.setTargetId(eNode.get("target-id").asText());
-                        ev11.setValue(eObjectMap.get(eNode.get("value").asText()));
-                        ev11.setValueId(eNode.get("value").asText());
+
+                        JsonNode fromNode = eNode.get("from");
+                        if(fromNode != null) {
+                            ev11.setFromPosition(fromNode.asInt());
+                        }
+
+                        JsonNode toNode = eNode.get("to");
+                        if(toNode != null) {
+                            ev11.setToPosition(toNode.asInt());
+                        }
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev11.setTargetId(targetNode.asText());
+                            ev11.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev11.setValueId(valueNode.asText());
+                            ev11.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev11;
                     }
                     break;
@@ -195,12 +264,27 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                     case "move-in-eattribute": {
                         MoveWithinEAttributeEvent ev12 = new MoveWithinEAttributeEvent();
                         ev12.setName(eNode.get("name").asText());
-                        ev12.setFromPosition(eNode.get("from").asInt());
-                        ev12.setToPosition(eNode.get("to").asInt());
-                        ev12.setTarget(eObjectMap.get(eNode.get("target-id").asText()));
-                        ev12.setTargetId(eNode.get("target-id").asText());
-                        ev12.setValue(eObjectMap.get(eNode.get("value").asText()));
-                        ev12.setValueId(eNode.get("value").asText());
+
+                        JsonNode fromNode = eNode.get("from");
+                        if(fromNode != null) {
+                            ev12.setFromPosition(fromNode.asInt());
+                        }
+
+                        JsonNode toNode = eNode.get("to");
+                        if(toNode != null) {
+                            ev12.setToPosition(toNode.asInt());
+                        }
+
+                        JsonNode targetNode = eNode.get("target-id");
+                        JsonNode valueNode = eNode.get("value");
+                        if(targetNode != null) {
+                            ev12.setTargetId(targetNode.asText());
+                            ev12.setTarget(eObjectMap.get(targetNode.asText()));
+                        }
+                        if(valueNode != null) {
+                            ev12.setValueId(valueNode.asText());
+                            ev12.setValue(eObjectMap.get(valueNode.asText()));
+                        }
                         event = ev12;
                     }
                     break;
@@ -211,12 +295,16 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                         event = new DeleteEObjectEvent(eClass, new NewCBPXMLResourceImpl(), id);
                     }
                     break;
+
+                    default: {
+                        throw new RuntimeException("ERROR: unrecognised element in the JSON data");
+                    }
                 }
-            }
-            if(event != null && session != null) {
-                map.get(session).add(event);
-            } else {
-                throw new RuntimeException("ERROR: event deserialization error occurred");
+                if(event != null && session != null) {
+                    map.get(session).add(event);
+                } else {
+                    throw new RuntimeException("ERROR: event deserialization error occurred");
+                }
             }
         }
         return new ChangeEventsMap(map, eObjectMap);
