@@ -175,6 +175,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                 break;
                                 case "set-eattribute": {
                                     SetEAttributeEvent eventino = new SetEAttributeEvent();
+                                    eventino.setName(e.getAttributeByName(new QName("name")).getValue());
                                     eventino.setTarget(this.geteObjectMap().get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino.setValue(e.getAttributeByName(new QName("name")).getValue().toString());
                                     eventino.setTargetId(e.getAttributeByName(new QName("target")).getValue());

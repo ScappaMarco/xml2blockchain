@@ -1,4 +1,4 @@
-package blockchain.util.jackson;
+package blockchain.util.jackson.changeEvent;
 
 import cbp.src.event.*;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -34,6 +34,7 @@ public class ChangeEventSerializer extends JsonSerializer<ChangeEvent> {
             gen.writeStringField("type", "create");
             gen.writeStringField("eobject-id", ((CreateEObjectEvent) event).getId());
             gen.writeStringField("eclass-name", ((CreateEObjectEvent) event).getEClass().getName());
+            gen.writeStringField("epackage", ((CreateEObjectEvent) event).getePackage());
         } else if(event instanceof AddToResourceEvent) {
             //System.out.println("serializing a Add To Resource");
             gen.writeStringField("type", "add-to-resource");
@@ -61,6 +62,7 @@ public class ChangeEventSerializer extends JsonSerializer<ChangeEvent> {
         } else if(event instanceof SetEAttributeEvent) {
             //System.out.println("serializing a Set attribute");
             gen.writeStringField("type", "set-eattribute");
+            gen.writeStringField("name", event.getName());
             gen.writeStringField("target-class", ((SetEAttributeEvent) event).getTarget().eClass().getName());
             gen.writeStringField("target-id", ((SetEAttributeEvent) event).getTargetId());
             gen.writeStringField("value", event.getValueId());

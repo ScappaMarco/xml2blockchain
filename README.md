@@ -10,3 +10,8 @@ To save the data in the Java data structure in the BlockChain we have to alter o
 To import and use all those libraries we used Apache Maven (https://maven.apache.org/).
 
 _All the paths in the project are written as relative paths_
+
+## Blockchain specification
+For the two main Blockchain operations (Saving all sessions, and getting the data form a specified block) we wrote a custom ChainCode in JavaScript (https://github.com/ScappaMarco/xml2blockchain/blob/main/src/main/java/blockchain/chaicode.js) to define custom operations:
+- **CreateBlock**: this operation take as arguments the **blockId** and the **JSONdata**: this data are all the events in the sessions serialized as JSON
+- **ReadBlock**: this operation take as argument the **blockId** and then return the data contained in the specified block as JSON: then this data i deserialized to give us an event list 

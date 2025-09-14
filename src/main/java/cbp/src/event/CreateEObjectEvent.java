@@ -11,6 +11,7 @@ public class CreateEObjectEvent extends EObjectEvent {
     protected CBPResource resource;
     protected String id;
     protected EObject eObject;
+    protected String ePackage;
 
     public CreateEObjectEvent(EObject eObject, String id) {
         super();
@@ -68,5 +69,13 @@ public class CreateEObjectEvent extends EObjectEvent {
     public ChangeEvent<?> reverse() {
         DeleteEObjectEvent event = new DeleteEObjectEvent(eClass, resource, id);
         return event;
+    }
+
+    public String getePackage() {
+        return this.ePackage;
+    }
+
+    public void setePackage(String ePackage) {
+        this.ePackage = ePackage;
     }
 }
