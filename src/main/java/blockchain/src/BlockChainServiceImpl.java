@@ -1,27 +1,38 @@
 package blockchain.src;
 
 import blockchain.util.ChangeEventMapSerializer;
+import blockchain.util.jackson.JacksonConfig;
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
 import cbp.src.event.StartNewSessionEvent;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.fusesource.jansi.Ansi;
 import org.hyperledger.fabric.gateway.Contract;
 import org.hyperledger.fabric.gateway.ContractException;
 import wallet.WalletManager;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class BlockChainServiceImpl implements BlockChainService {
 
     @Override
     public List<String> serializeChangeEventMap(Map<StartNewSessionEvent, List<ChangeEvent>> eventListMap) {
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().a("-----SERIALIZATION-----").reset());
         return ChangeEventMapSerializer.changeEventMapToStringList(eventListMap);
     }
 
@@ -32,17 +43,30 @@ public class BlockChainServiceImpl implements BlockChainService {
             long serializationStart = System.currentTimeMillis();
             List<String> changeEventStringList = this.serializeChangeEventMap(map.getChangeEvents());
             long serializationEnd = System.currentTimeMillis();
-            System.out.println("SERIALIZATION TIME: the serialization of the model took " + (serializationEnd - serializationStart) + "ms (milliseconds");
+
+            System.out.println();
+            System.out.println(Ansi.ansi().bold().fgBrightGreen().a("TIME RECORD - SERIALIZATION TIME: " + (serializationEnd - serializationStart) + "ms (milliseconds").reset());
+            System.out.println();
 
             int i = 1;
             //System.out.println(changeEventStringList);
-            System.out.println("Number of serialized session(s): " + changeEventStringList.size());
+            System.out.println("\t - Number of serialized session(s): " + changeEventStringList.size());
+            System.out.println();
+            System.out.println(Ansi.ansi().bold().a("-----BLOCKCHAIN SAVING-----").reset());
+
             for(String s : changeEventStringList) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                GZIPOutputStream gzipOutputStream = new GZIPOutputStream(baos);
+
+                gzipOutputStream.write(s.getBytes("UTF-8"));
+                gzipOutputStream.close();
+
+                String compressedData = Base64.getEncoder().encodeToString(baos.toByteArray());
                 String blockId = "block" + (i);
                 i++;
-                contract.submitTransaction("CreateBlock", blockId, s);
+                contract.submitTransaction("CreateBlock", blockId, compressedData);
 
-                System.out.println("BLOCK SAVED: " + blockId);
+                System.out.println(Ansi.ansi().fgBlack().bg(Ansi.Color.BLUE).bold().a("\t - BLOCK SAVED: " + blockId).reset());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,6 +84,7 @@ public class BlockChainServiceImpl implements BlockChainService {
     @Override
     public List<ChangeEvent> getBlock(String blockId) {
         List<ChangeEvent> resultArrayList = null;
+        ObjectMapper mapper = JacksonConfig.getMapper();
 
         try {
             Contract contract = this.fabricConnect("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
@@ -68,13 +93,28 @@ public class BlockChainServiceImpl implements BlockChainService {
             if(resultByteArray == null || resultByteArray.length == 0) {
                 throw new RuntimeException("ERROR: no block found fot this ID: " + blockId);
             }
-            String json = new String(resultByteArray);
-            System.out.print("BLOCK DATA: this is the data of the specified Block: " + json);
+            String compressedStringData = new String(resultByteArray);
+            byte[] compressedBytes = Base64.getDecoder().decode(compressedStringData);
 
-            //deserialization...
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ContractException e) {
+            ByteArrayInputStream bais = new ByteArrayInputStream(compressedBytes);
+            GZIPInputStream gzipInputStream = new GZIPInputStream(bais);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while((len = gzipInputStream.read(buffer)) > 0) {
+                baos.write(buffer, 0, len);
+            }
+            gzipInputStream.close();
+
+            String json = baos.toString("UTF-8");
+            System.out.println("\t - BLOCK DATA: this is the data of the specified Block: " + json);
+
+            ChangeEventsMap map = mapper.readValue(json, ChangeEventsMap.class);
+            if(map != null && !(map.getChangeEvents().isEmpty())) {
+                resultArrayList = map.getChangeEvents().values().stream().findFirst().orElse(new ArrayList<>());
+            }
+        } catch (IOException | ContractException e) {
             throw new RuntimeException(e);
         }
 
@@ -95,8 +135,10 @@ public class BlockChainServiceImpl implements BlockChainService {
 
     private void inizializeWallet(String walletPathString, String keyPathString, String certPathString) throws IOException {
         Path walletPath= Paths.get(walletPathString);
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().a("-----WALLET INIZIALIZATION-----").reset());
         if(Files.list(walletPath).findAny().isEmpty()) {
-            System.out.println("The Wallet manager is being initialized");
+            System.out.println(Ansi.ansi().bgYellow().fgBlack().a("The Wallet manager is being initialized").reset());
             Path keyPath = Files.list(Paths.get("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore"))
                     .findFirst().orElseThrow(() -> new RuntimeException("No KEY found in /keystore directory"));
 
@@ -116,7 +158,7 @@ public class BlockChainServiceImpl implements BlockChainService {
             }
             System.out.println("Fabric Wallet initialized");
         } else {
-            System.out.println("Wallet manager initialization was already done");
+            System.out.println("\t - Wallet manager initialization was already done");
         }
     }
 }

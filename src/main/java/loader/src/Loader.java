@@ -4,7 +4,6 @@ import blockchain.src.BlockChainServiceFactory;
 import blockchain.src.BlockChainServiceImpl;
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
-import cbp.src.event.StartNewSessionEvent;
 import cbp.src.resource.CBPXMLResourceFactory;
 import cbp.src.resource.NewCBPXMLResourceImpl;
 import org.eclipse.emf.common.util.URI;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.cert.CertificateException;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Loader {
@@ -33,10 +31,10 @@ public class Loader {
     }
 
     private static void cbp2map() throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
-        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2.cbpxml"));
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2-test.cbpxml"));
         System.out.println("Computing...");
         long parsingStart = System.currentTimeMillis();
-        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
+        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2-test.cbpxml")));
         long parsingEnd = System.currentTimeMillis();
 
         System.out.println();

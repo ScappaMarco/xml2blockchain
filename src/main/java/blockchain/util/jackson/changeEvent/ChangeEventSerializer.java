@@ -120,7 +120,7 @@ public class ChangeEventSerializer extends JsonSerializer<ChangeEvent> {
         } else if(event instanceof DeleteEObjectEvent) {
             //System.out.println("serializing a Delete");
             gen.writeStringField("type", "delete");
-            gen.writeStringField("delete-id", ((DeleteEObjectEvent) event).getId());
+            gen.writeStringField("id", ((DeleteEObjectEvent) event).getId());
             gen.writeStringField("eclass", ((DeleteEObjectEvent) event).getEClass().getName());
             //NOTE: the eClass of the delete will be the eClass of the corresponding EObject (by the id attribute)
         }
