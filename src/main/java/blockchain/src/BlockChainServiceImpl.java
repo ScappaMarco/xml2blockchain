@@ -108,11 +108,12 @@ public class BlockChainServiceImpl implements BlockChainService {
             gzipInputStream.close();
 
             String json = baos.toString("UTF-8");
-            System.out.println("\t - BLOCK DATA: this is the data of the specified Block: " + json);
+            //System.out.println("\t - BLOCK DATA: this is the data of the specified Block: " + json);
 
             ChangeEventsMap map = mapper.readValue(json, ChangeEventsMap.class);
             if(map != null && !(map.getChangeEvents().isEmpty())) {
                 resultArrayList = map.getChangeEvents().values().stream().findFirst().orElse(new ArrayList<>());
+                System.out.println("\t - BLOCK DATA LENGTH: " + resultArrayList.size());
             }
         } catch (IOException | ContractException e) {
             throw new RuntimeException(e);

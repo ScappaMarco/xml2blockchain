@@ -30,11 +30,12 @@ public class Loader {
         System.out.println();
     }
 
+
     private static void cbp2map() throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
-        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2-test.cbpxml"));
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2.cbpxml"));
         System.out.println("Computing...");
         long parsingStart = System.currentTimeMillis();
-        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2-test.cbpxml")));
+        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
         long parsingEnd = System.currentTimeMillis();
 
         System.out.println();
