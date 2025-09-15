@@ -22,6 +22,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
     protected int persistedEvents = 0;
     private boolean optimised;
     private Map<String, EClass> eObjectMap = new HashMap<>();
+    private List<String> deleteSet;
 
     public NewCBPXMLResourceImpl() {
         super();
@@ -349,4 +350,9 @@ public class NewCBPXMLResourceImpl extends CBPResource {
             }
         }
     }
+
+    private void addToDeleteSet(InputStream inputStream) {
+
+    }
+
 }

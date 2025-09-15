@@ -45,7 +45,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
         List<ChangeEvent> eventsList = new ArrayList<>();
 
         if(eventsListNode != null && eventsListNode.isArray()) {
-            ChangeEvent event = null;
+            ChangeEvent<?> event = null;
             for (JsonNode eNode : eventsListNode) {
                 String eventType = eNode.get("type").asText();
 
