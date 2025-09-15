@@ -110,6 +110,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                             ev3.setTargetId(targetNode.asText());
                             ev3.setTarget(eObjectMap.get(targetNode.asText()));
                         }
+
                         if(valueNode != null) {
                             ev3.setValueId(valueNode.asText());
                             ev3.setValue(eObjectMap.get(valueNode.asText()));
