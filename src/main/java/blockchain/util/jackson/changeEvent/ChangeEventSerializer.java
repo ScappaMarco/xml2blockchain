@@ -32,7 +32,7 @@ public class ChangeEventSerializer extends JsonSerializer<ChangeEvent> {
         } else if(event instanceof CreateEObjectEvent) {
             //System.out.println("serializing a Create");
             gen.writeStringField("type", "create");
-            gen.writeStringField("eobject-id", ((CreateEObjectEvent) event).getId());
+            gen.writeStringField("id", ((CreateEObjectEvent) event).getId());
             gen.writeStringField("eclass-name", ((CreateEObjectEvent) event).getEClass().getName());
             gen.writeStringField("epackage", ((CreateEObjectEvent) event).getePackage());
         } else if(event instanceof AddToResourceEvent) {

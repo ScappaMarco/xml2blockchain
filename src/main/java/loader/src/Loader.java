@@ -8,6 +8,7 @@ import cbp.src.event.StartNewSessionEvent;
 import cbp.src.resource.CBPXMLResourceFactory;
 import cbp.src.resource.NewCBPXMLResourceImpl;
 import org.eclipse.emf.common.util.URI;
+import org.fusesource.jansi.Ansi;
 
 import javax.xml.stream.FactoryConfigurationError;
 import java.io.File;
@@ -22,25 +23,38 @@ import java.util.Scanner;
 public class Loader {
 
     public static void main(String[] args) throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
+        long generalStart = System.currentTimeMillis();
         cbp2map();
+        long generalEnd = System.currentTimeMillis();
+
+        System.out.println();
+        System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - GENERAL TIME: " + (generalEnd - generalStart) + "ms (milliseconds)"));
+        System.out.println();
     }
 
     private static void cbp2map() throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
-        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2-smaller.cbpxml"));
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2.cbpxml"));
         System.out.println("Computing...");
         long parsingStart = System.currentTimeMillis();
-        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2-smaller.cbpxml")));
+        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
         long parsingEnd = System.currentTimeMillis();
-        System.out.println("PARSING TIME: the parsing took "  + (parsingEnd - parsingStart) + "ms (milliseconds)");
 
-        System.out.println("Parsing visualization: ");
+        System.out.println();
+        System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - PARSING TIME: "  + (parsingEnd - parsingStart) + "ms (milliseconds)").reset());
+        System.out.println();
+
+        /*
+        System.out.println();
+        System.out.println(Ansi.ansi().fgBrightYellow().bold().a("-----PARSING VISUALIZATION----- ").reset());
         Map<StartNewSessionEvent, List<ChangeEvent>> result = changeEventsMap.getChangeEvents();
 
         //test and debug
-        System.out.println("Session(s): " + result.size());
         for(Map.Entry<StartNewSessionEvent, List<ChangeEvent>> entry : result.entrySet()) {
-            System.out.println("Session ID: " + entry.getKey().getSessionId() + ", Events: " + entry.getValue());
+            System.out.println(Ansi.ansi().fgBrightYellow().bold().a("\t - Session ID: " + entry.getKey().getSessionId()).reset());
+            System.out.print(Ansi.ansi().fgBrightYellow().bold().a("\t - Events: " + entry.getValue()).reset());
         }
+
+         */
         mapInBlockchain(changeEventsMap);
     }
 
@@ -50,37 +64,50 @@ public class Loader {
         List<ChangeEvent> eventBlockList = null;
 
         long savingStart = System.currentTimeMillis();
+        System.out.println(Ansi.ansi().bold().a("-----SAVING IN BLOCKCHAIN-----").reset());
         blockChainService.saveModelToBlockchain(changeEventsMap);
         long savingEnd = System.currentTimeMillis();
-        System.out.println("BLOCKCHAIN TIME: saving the model to the BlockChain took " + (savingEnd - savingStart) + "ms (milliseconds)");
 
-        System.out.println("MODEL SAVED IN BLOCKCHAIN: the model has been saved in blockchain");
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().fgBrightGreen().a("TIME RECORD - BLOCKCHAIN TIME: " + (savingEnd - savingStart) + "ms (milliseconds)").reset());
+        System.out.println();
+
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().a("-----BLOCKCHAIN BLOCK READING-----").reset());
         if(changeEventsMap.getChangeEvents().size() == 1) {
-            System.out.println("The model contains only 1 entry");
+            System.out.println("\t - The model contains only 1 entry");
+            long deserializationStart = System.currentTimeMillis();
             eventBlockList = blockChainService.getBlock("block1");
+            long deserializationEnd = System.currentTimeMillis();
+
+            System.out.println();
+            System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - DESERIALIZATION TIME: " + (deserializationEnd - deserializationStart) + "ms (milliseconds"));
+            System.out.println();
+
             if(eventBlockList != null) {
-                System.out.println("CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
-                System.out.println(eventBlockList);
+                System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block has been taken").reset());
+                System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
+                //System.out.println(eventBlockList);
             } else {
-                System.out.println("ERROR: event list null");
+                System.out.println(Ansi.ansi().bgRed().a("ERROR: event list null").reset());
             }
         }  else if(changeEventsMap.getChangeEvents().isEmpty()) {
-            System.out.println("The model has no entry to select from");
+            System.out.println(Ansi.ansi().fgBrightRed().a("ATTENTION: The model has no entry to select from").reset());
         } else {
-            System.out.println("Model length: " + changeEventsMap.getChangeEvents().size());
-            System.out.println("Enter the ID of the Block you want to read: the Blocks have id's from 1 to " + (changeEventsMap.getChangeEvents().size()));
-            System.out.print(":> ");
+            System.out.println("\t - Model length: " + changeEventsMap.getChangeEvents().size());
+            System.out.println("\t Enter the ID of the Block you want to read: the Blocks have id's from 1 to " + (changeEventsMap.getChangeEvents().size()));
+            System.out.print("\t :> ");
             int blockChoice = scanner.nextInt();
             if (blockChoice < 0 || blockChoice > changeEventsMap.getChangeEvents().size()) {
-                System.out.println("ILLEGAL ARGUMENT: the Block ID has to be in the range 1 to " + (changeEventsMap.getChangeEvents().size()));
+                System.out.println(Ansi.ansi().fgBrightRed().a("ILLEGAL ARGUMENT: the Block ID has to be in the range 1 to " + (changeEventsMap.getChangeEvents().size())).reset());
             } else {
                 eventBlockList = blockChainService.getBlock("block" + (blockChoice));
                 if (eventBlockList != null) {
-                    System.out.println("The data of the Block with the ID " + (blockChoice) + " has been taken");
-                    System.out.println("CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
+                    System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been taken").reset());
+                    System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
                     System.out.println(eventBlockList);
                 } else {
-                    System.out.println("ERROR: event list null");
+                    System.out.println(Ansi.ansi().fgBrightRed().a("ERROR: event list null").reset());
                 }
             }
         }

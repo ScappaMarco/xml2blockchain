@@ -1,12 +1,11 @@
 package blockchain.util.jackson;
 
+import blockchain.util.jackson.changeEvent.ChangeEventDeserializer;
+import blockchain.util.jackson.changeEvent.ChangeEventSerializer;
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.eclipse.emf.ecore.EObject;
-
-import java.util.List;
 
 public class JacksonConfig {
 

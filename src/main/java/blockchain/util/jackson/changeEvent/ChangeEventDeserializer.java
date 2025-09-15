@@ -28,10 +28,11 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
         JsonNode rootNode = jasonParser.getCodec().readTree(jasonParser);
 
         StartNewSessionEvent session = null;
+        JsonNode sessionNode = rootNode.get("session");
 
-        if(rootNode.get("type").asText().equals("session")) {
-            String sessionId = rootNode.get("session-id").asText();
-            String sessionTimestamp = rootNode.get("timestamp").asText();
+        if(sessionNode.get("type").asText().equals("session")) {
+            String sessionId = sessionNode.get("session-id").asText();
+            String sessionTimestamp = sessionNode.get("timestamp").asText();
 
             session = new StartNewSessionEvent(sessionId, sessionTimestamp);
 
@@ -50,7 +51,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
 
                 switch (eventType) {
                     case "register": {
-                        String packageName = eNode.get("name").asText();
+                        String packageName = eNode.get("epackage-name").asText();
                         EPackage ePackage = EcoreFactory.eINSTANCE.createEPackage();
                         ePackage.setName(packageName);
                         event = new RegisterEPackageEvent(ePackage, new ChangeEventAdapter(new NewCBPXMLResourceImpl()));

@@ -1,5 +1,6 @@
 package blockchain.src;
 
+import org.fusesource.jansi.Ansi;
 import org.hyperledger.fabric.gateway.*;
 
 import java.io.IOException;
@@ -18,9 +19,11 @@ public class FabricConnector {
 
         Path networkConfigPath = Paths.get(networkConfigString);
 
-        System.out.println("DEBUG: connection profile absolute path: " + networkConfigPath.toAbsolutePath());
-        System.out.println("DEBUG: wallet path absolute: " + walletPath.toAbsolutePath());
-        System.out.println("DEBUG: wallet contains appUser? " + (wallet.get("appUser") != null));
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().a("-----CONNECTION DEBUG DATA-----").reset());
+        System.out.println("\t - DEBUG: connection profile absolute path: " + networkConfigPath.toAbsolutePath());
+        System.out.println("\t - DEBUG: wallet path absolute: " + walletPath.toAbsolutePath());
+        System.out.println("\t - DEBUG: wallet contains appUser? " + (wallet.get("appUser") != null));
 
         Gateway.Builder builder = Gateway.createBuilder().identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(false);
 
@@ -32,14 +35,16 @@ public class FabricConnector {
             Identity identity = wallet.get("appUser");
             if(identity instanceof X509Identity) {
                 X509Identity x509Identity = (X509Identity) identity;
-                System.out.println("MSP ID: " + x509Identity.getMspId());
-                System.out.println("CERTIFICATE SUBJECT: " + x509Identity.getCertificate().getSubjectDN());
+                System.out.println(("\t - MSP ID: " + x509Identity.getMspId()));
+                System.out.println("\t - CERTIFICATE SUBJECT: " + x509Identity.getCertificate().getSubjectDN());
             }
         } catch (Exception e) {
             System.out.println("Error getting identity info: " + e.getMessage());
         }
 
-        System.out.println("CONNECTION DONE: " + CHANNEL_NAME);
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().a("-----CONNECTION INFO-----").reset());
+        System.out.println("\t - CONNECTION DONE: " + CHANNEL_NAME);
         return network.getContract(CONTRACT_NAME);
     }
 }

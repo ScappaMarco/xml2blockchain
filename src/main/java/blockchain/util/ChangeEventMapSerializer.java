@@ -5,6 +5,7 @@ import cbp.src.event.ChangeEvent;
 import cbp.src.event.StartNewSessionEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.fusesource.jansi.Ansi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,14 +26,20 @@ public class ChangeEventMapSerializer {
                     if(entry.getValue().size() > 0) {
                         wrapper.put("session", entry.getKey());
                         wrapper.put("events", entry.getValue());
-                        System.out.println("TRYING TO SERIALIZE: " + entry.getKey().getSessionId() + ". EVENT LIST SIZE: " + entry.getValue().size());
+                        System.out.println("\t TRYING TO SERIALIZE: ");
+                        System.out.println("\t - SESSION ID: " + entry.getKey().getSessionId());
+                        System.out.println("\t - EVENT LIST SIZE: " + entry.getValue().size());
                         serializedChangeEvent = mapper.writeValueAsString(wrapper);
                     } else {
-                        System.out.println("TRYING TO SERIALIZE: " + entry.getKey().getSessionId());
+                        System.out.println("\t TRYING TO SERIALIZE: ");
+                        System.out.println("\t - sessionID: " + entry.getKey().getSessionId());
                         serializedChangeEvent = mapper.writeValueAsString(entry.getKey());
                     }
                 }
-                System.out.println(serializedChangeEvent);
+                /*
+                System.out.println(Ansi.ansi().fgBlack().bgBrightGreen().a("\t SERIALIAZED CHANGE EVENTS: " + serializedChangeEvent).reset());
+
+                 */
                 result.add(serializedChangeEvent);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("ERROR: Change Event serializing error: " + entry.getKey().getSessionId());
