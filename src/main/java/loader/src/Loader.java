@@ -102,9 +102,12 @@ public class Loader {
             } else {
                 eventBlockList = blockChainService.getBlock("block" + (blockChoice));
                 if (eventBlockList != null) {
-                    System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been taken").reset());
+                    System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been stored in \"eventBlockList\"" ).reset());
+                    /*
                     System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
                     System.out.println(eventBlockList);
+
+                     */
                 } else {
                     System.out.println(Ansi.ansi().fgBrightRed().a("ERROR: event list null").reset());
                 }

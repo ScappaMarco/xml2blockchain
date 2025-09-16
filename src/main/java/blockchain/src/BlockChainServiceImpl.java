@@ -38,6 +38,7 @@ public class BlockChainServiceImpl implements BlockChainService {
 
     @Override
     public void saveModelToBlockchain(ChangeEventsMap map) throws IOException {
+        String blockId = null;
         try {
             Contract contract = this.fabricConnect("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
             long serializationStart = System.currentTimeMillis();
@@ -62,19 +63,24 @@ public class BlockChainServiceImpl implements BlockChainService {
                 gzipOutputStream.close();
 
                 String compressedData = Base64.getEncoder().encodeToString(baos.toByteArray());
-                String blockId = "block" + (i);
+                blockId = "block" + (i);
                 i++;
-                contract.submitTransaction("CreateBlock", blockId, compressedData);
 
-                System.out.println(Ansi.ansi().fgBlack().bg(Ansi.Color.BLUE).bold().a("\t - BLOCK SAVED: " + blockId).reset());
+                try {
+                    contract.submitTransaction("CreateBlock", blockId, compressedData);
+                    System.out.println(Ansi.ansi().fgBlack().bg(Ansi.Color.BLUE).bold().a("\t - BLOCK SAVED: " + blockId).reset());
+                } catch (ContractException e) {
+                    if(e.getMessage().contains("already exists") || e.getMessage().contains("exists") || e.getMessage().contains("ALREADY EXiSTS") || e.getMessage().contains("EXISTS")) {
+                        System.out.println(Ansi.ansi().bg(Ansi.Color.YELLOW).fgBlack().bold().a("ATTENTION: the block with the ID \"" + blockId + "\" already exists - skipping...").reset());
+                    } else {
+                        throw new RuntimeException("ERROR: connection contract error occurred");
+                    }
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException("ERROR: fabric network connect error occurred");
         }
-        catch (ContractException e) {
-            throw new RuntimeException("ERROR: contract error occurred");
-        } catch (InterruptedException e) {
+        catch (InterruptedException e) {
             throw new RuntimeException("ERROR: saving interrupted");
         } catch (TimeoutException e) {
             throw new RuntimeException("ERROR: time-out error occurred");
@@ -139,7 +145,7 @@ public class BlockChainServiceImpl implements BlockChainService {
         System.out.println();
         System.out.println(Ansi.ansi().bold().a("-----WALLET INIZIALIZATION-----").reset());
         if(Files.list(walletPath).findAny().isEmpty()) {
-            System.out.println(Ansi.ansi().bgYellow().fgBlack().a("The Wallet manager is being initialized").reset());
+            System.out.println(Ansi.ansi().bgYellow().fgBlack().a("WALLET: The Wallet manager is being initialized").reset());
             Path keyPath = Files.list(Paths.get("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore"))
                     .findFirst().orElseThrow(() -> new RuntimeException("No KEY found in /keystore directory"));
 
@@ -157,9 +163,9 @@ public class BlockChainServiceImpl implements BlockChainService {
                 exx.printStackTrace();
                 throw new RuntimeException("ERROR: wallet manager private key error occurred");
             }
-            System.out.println("Fabric Wallet initialized");
+            System.out.println("\t - WALLET: Fabric Wallet initialized");
         } else {
-            System.out.println("\t - Wallet manager initialization was already done");
+            System.out.println("\t - WALLET: Wallet manager initialization was already done");
         }
     }
 }

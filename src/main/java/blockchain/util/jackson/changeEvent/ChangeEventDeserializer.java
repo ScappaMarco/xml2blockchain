@@ -96,7 +96,6 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                             ev2.setValue(eObjectMap.get(valueNode.asText()));
                         }
                         event = ev2;
-
                     }
                     break;
 
