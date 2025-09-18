@@ -22,6 +22,7 @@ public class Loader {
 
     public static void main(String[] args) throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
         long generalStart = System.currentTimeMillis();
+        //System.out.println("starting");
         cbp2map();
         long generalEnd = System.currentTimeMillis();
 

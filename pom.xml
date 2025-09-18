@@ -65,7 +65,6 @@
             <artifactId>jansi</artifactId>
             <version>2.4.0</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -75,7 +74,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>cbp.src.loader.src.Loader</mainClass>
+                    <mainClass>loader.src.Loader</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -6,13 +6,11 @@ class BlockContract extends Contract {
 
     async CreateBlock(ctx, blockId, jsonData) {
         const exists = await ctx.stub.getState(blockId);
-        /*
         if (exists && exists.length > 0) {
-            throw new Error(`The Block with this ID: ${blockId} alredy exists`);
+            throw new Error(`The Block with this ID: ${blockId} already exists`);
         }
-        */
         await ctx.stub.putState(blockId, Buffer.from(jsonData));
-        return `The Block with this ID:  ${blockId} has been created successfuly`;
+        return `The Block with this ID:  ${blockId} has been created successfully`;
     }
 
     async ReadBlock(ctx, blockId) {
