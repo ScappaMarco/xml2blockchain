@@ -10,7 +10,13 @@ import java.nio.file.Paths;
 public class FabricConnector {
 
     private static final String CHANNEL_NAME = "mychannel";
-    private static final String CONTRACT_NAME = "block-contract";
+    private static final String CONTRACT_NAME = System.getProperty("contractName", "block-contract-dc");
+
+    /*
+    block-contract: blockchain without duplicate checker
+    block-contract-dc: blockchain with duplicate checker
+    System.getProperty("contractName", "block-contract-dc"): input from mvn command line (default -> with duplicate checker)
+     */
 
     public static Contract connect(String networkConfigString) throws IOException {
         //networkConfigPath = ../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml
@@ -27,24 +33,27 @@ public class FabricConnector {
 
         Gateway.Builder builder = Gateway.createBuilder().identity(wallet, "appUser").networkConfig(networkConfigPath).discovery(false);
 
+        //try (Gateway gateway = builder.connect();){
         Gateway gateway = builder.connect();
+            Network network = gateway.getNetwork(CHANNEL_NAME);
 
-        Network network = gateway.getNetwork(CHANNEL_NAME);
-
-        try {
-            Identity identity = wallet.get("appUser");
-            if(identity instanceof X509Identity) {
-                X509Identity x509Identity = (X509Identity) identity;
-                System.out.println(("\t - MSP ID: " + x509Identity.getMspId()));
-                System.out.println("\t - CERTIFICATE SUBJECT: " + x509Identity.getCertificate().getSubjectDN());
+            try {
+                Identity identity = wallet.get("appUser");
+                if(identity instanceof X509Identity) {
+                    X509Identity x509Identity = (X509Identity) identity;
+                    System.out.println(("\t - MSP ID: " + x509Identity.getMspId()));
+                    System.out.println("\t - CERTIFICATE SUBJECT: " + x509Identity.getCertificate().getSubjectDN());
+                }
+            } catch (Exception e) {
+                System.out.println(Ansi.ansi().fgRed().bold().a("\t ERROR: getting identity info: " + e.getMessage()).reset());
             }
-        } catch (Exception e) {
-            System.out.println("Error getting identity info: " + e.getMessage());
-        }
 
-        System.out.println();
-        System.out.println(Ansi.ansi().bold().a("-----CONNECTION INFO-----").reset());
-        System.out.println("\t - CONNECTION DONE: " + CHANNEL_NAME);
-        return network.getContract(CONTRACT_NAME);
+            System.out.println();
+            System.out.println(Ansi.ansi().bold().a("-----CONNECTION INFO-----").reset());
+            System.out.println("\t - CONNECTION DONE: " + CHANNEL_NAME);
+            return network.getContract(CONTRACT_NAME);
+        //} catch(Exception e) {
+            //throw new RuntimeException("ERROR: hahahah");
+        //}
     }
 }

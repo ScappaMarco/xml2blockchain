@@ -12,5 +12,5 @@ public interface BlockChainService {
 
     public List<String> serializeChangeEventMap(Map<StartNewSessionEvent, List<ChangeEvent>> eventListMap);
     public void saveModelToBlockchain(ChangeEventsMap map) throws IOException;
-    public List<ChangeEvent> getBlock(String sessionId);
+    public Map<StartNewSessionEvent, List<ChangeEvent>> getBlock(String sessionId);
 }

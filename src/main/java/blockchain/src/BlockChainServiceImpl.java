@@ -88,7 +88,7 @@ public class BlockChainServiceImpl implements BlockChainService {
     }
 
     @Override
-    public List<ChangeEvent> getBlock(String blockId) {
+    public Map<StartNewSessionEvent, List<ChangeEvent>> getBlock(String blockId) {
         List<ChangeEvent> resultArrayList = null;
         ObjectMapper mapper = JacksonConfig.getMapper();
 
@@ -114,18 +114,36 @@ public class BlockChainServiceImpl implements BlockChainService {
             gzipInputStream.close();
 
             String json = baos.toString("UTF-8");
+            //System.out.println("BC JSON: " + json);
             //System.out.println("\t - BLOCK DATA: this is the data of the specified Block: " + json);
 
             ChangeEventsMap map = mapper.readValue(json, ChangeEventsMap.class);
+            return map.getChangeEvents();
+            /*
+            if(map.getChangeEvents().values() != null) {
+                System.out.println("MAP VALUES: " + map.getChangeEvents().values());
+            } else {
+                System.out.println("EVENTS NULL");
+            }
+
             if(map != null && !(map.getChangeEvents().isEmpty())) {
-                resultArrayList = map.getChangeEvents().values().stream().findFirst().orElse(new ArrayList<>());
-                System.out.println("\t - BLOCK DATA LENGTH: " + resultArrayList.size());
+                if(!(map.getChangeEvents().values().contains(null))) {
+                    resultArrayList = map.getChangeEvents().values();
+                    System.out.println("\t - BLOCK DATA LENGTH: " + resultArrayList.size());
+                } else {
+                    System.out.println("\t - NO BLOCK DATA: session only");
+                    resultArrayList = new ArrayList<>();
+                }
             }
         } catch (IOException | ContractException e) {
             throw new RuntimeException(e);
         }
 
         return resultArrayList;
+             */
+        } catch (IOException | ContractException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Contract fabricConnect(String networkConfigStringPAth) throws IOException {

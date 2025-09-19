@@ -23,7 +23,7 @@ public class ChangeEventMapSerializer {
         for(Map.Entry<StartNewSessionEvent, List<ChangeEvent>> entry : eventListMap.entrySet()) {
             try {
                 if(entry.getKey() != null) {
-                    if(entry.getValue().size() > 0) {
+                    if(!entry.getValue().isEmpty()) {
                         wrapper.put("session", entry.getKey());
                         wrapper.put("events", entry.getValue());
                         System.out.println("\t TRYING TO SERIALIZE: ");
@@ -33,14 +33,18 @@ public class ChangeEventMapSerializer {
                     } else {
                         System.out.println("\t TRYING TO SERIALIZE: ");
                         System.out.println("\t - sessionID: " + entry.getKey().getSessionId());
+                        //wrapper.put("session", mapper.convertValue(entry.getKey(), Object.class));
+                        //wrapper.put("events", new ArrayList<>());
                         serializedChangeEvent = mapper.writeValueAsString(entry.getKey());
+                        System.out.println(Ansi.ansi().fgBrightYellow().a("\t - ATTENTION: session only " + serializedChangeEvent).reset());
                     }
                 }
                 /*
                 System.out.println(Ansi.ansi().fgBlack().bgBrightGreen().a("\t SERIALIAZED CHANGE EVENTS: " + serializedChangeEvent).reset());
-
                  */
-                result.add(serializedChangeEvent);
+                if(serializedChangeEvent != null) {
+                    result.add(serializedChangeEvent);
+                }
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("ERROR: Change Event serializing error: " + entry.getKey().getSessionId());
             }

@@ -75,6 +75,8 @@
                 <version>3.1.0</version>
                 <configuration>
                     <mainClass>loader.src.Loader</mainClass>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                    <!--<fork>true</fork>-->
                 </configuration>
             </plugin>
         </plugins>
