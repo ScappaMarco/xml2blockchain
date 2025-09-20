@@ -16,4 +16,7 @@ For the two main Blockchain operations (Saving all sessions, and getting the dat
 Due to memory space, before pushing the Blocks in BlockChain they are compressed and then sent. The same procedure is done whenever we want to read a block: we first decompress the data and then we deserialize
 
 ### Blockchain main logic
-The design of the BlockChain has been defined in the BlockChainService directory's files (https://github.com/ScappaMarco/xml2blockchain/tree/main/src/main/java/blockchain): here you can find the definitions of the BlockChain two main functions (save, read). 
+The design of the BlockChain has been defined in the BlockChainService directory's files (https://github.com/ScappaMarco/xml2blockchain/tree/main/src/main/java/blockchain): here you can find the definitions of the BlockChain two main functions (save, read).
+
+## Timing
+Using the file timer.py (https://github.com/ScappaMarco/xml2blockchain/blob/main/scripts/timer.py) we visualized the mean time of some of the main subprocesses in the project: particularly we measured **Parsing time**, **Serialization time**, **BlockChain saving time** and **General time** with and without the **_Duplicate block checker_**.
