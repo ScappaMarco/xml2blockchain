@@ -16,7 +16,15 @@ For the two main Blockchain operations (Saving all sessions, and getting the dat
 Due to memory space, before pushing the Blocks in BlockChain they are compressed and then sent. The same procedure is done whenever we want to read a block: we first decompress the data and then we deserialize
 
 ### Blockchain main logic
-The design of the BlockChain has been defined in the BlockChainService directory's files (https://github.com/ScappaMarco/xml2blockchain/tree/main/src/main/java/blockchain): here you can find the definitions of the BlockChain two main functions (save, read).
+The design of the BlockChain has been defined in the BlockChainService directory's files (https://github.com/ScappaMarco/xml2blockchain/tree/main/src/main/java/blockchain/chaincodes): here you can find the definitions of the BlockChain two main functions (save, read) in two distinct configurations:
+- **Duplicate checker**: the duplicate checker checks if the block with that ID and the block data already exists in the chaincode; if so, it returns an error message, otherwise the transaction make it in the blockchain
+- **Non-Duplicate checker**: in this configuration, the chaincode allows everything to enter the blockchain. So, every transaction is not checked before being pushed inside the chaincode. This configuration is obviously slower than the previous one, since writing in the chaincode requires more time than just checking the existence
+Which one of the configuration is in use, is ruled by the "_FabricConnector_" (https://github.com/ScappaMarco/xml2blockchain/blob/main/src/main/java/blockchain/src/connect/FabricConnector.java). This file has a variable named "_CONTRACT_NAME_": by the value of this variable depends which one the chaincode is being interrogated to use.
+Each one of the two chaincodes has been created using the "_deployCC_" as it follows: **./network.sh deployCC -ccn chaincode-name -ccv 1.0 -ccp /path/to/your/chaincode -ccl chaincode-specification-lenguage**,
+- **-ccn**: this flag is used to specify the name that we want to use when we are about to connect to the chaincode
+- **-ccv**: this flag is used to specify the version of the chaincode. This is useful if we want to upgrade the code of the chaincode, and in this cass we are going to re-deploy a 2.0 version
+- **-ccp**: this flag is used to specify where we defined the code of the chaincode.
+- **-ccl**: this flag is used to specify the language with which we defined the chaincode. In our case, the chaincode is defined in JavaScript
 
 ## Timing
 Using the file timer.py (https://github.com/ScappaMarco/xml2blockchain/blob/main/scripts/timer.py) we visualized the mean time of some of the main subprocesses in the project: particularly we measured **Parsing time**, **Serialization time**, **BlockChain saving time** and **General time** with and without the **_Duplicate block checker_**.
