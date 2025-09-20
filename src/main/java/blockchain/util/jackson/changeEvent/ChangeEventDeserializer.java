@@ -56,6 +56,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                 session = new StartNewSessionEvent(sessionId, sessionTimestamp);
 
                 map.put(session, new ArrayList<>());
+                System.out.println("\t - DESERIALIZING: deserialing a session only branch");
             } else {
                 throw new RuntimeException("ERROR: session not present in the JSON node");
             }

@@ -1,5 +1,6 @@
 package blockchain.src;
 
+import blockchain.src.connect.FabricConnector;
 import blockchain.util.ChangeEventMapSerializer;
 import blockchain.util.jackson.JacksonConfig;
 import cbp.src.dto.ChangeEventsMap;
@@ -19,7 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +40,7 @@ public class BlockChainServiceImpl implements BlockChainService {
     public void saveModelToBlockchain(ChangeEventsMap map) throws IOException {
         String blockId = null;
         try {
+            //String modelName = String.valueOf(map.toString().hashCode());
             Contract contract = this.fabricConnect("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
             long serializationStart = System.currentTimeMillis();
             List<String> changeEventStringList = this.serializeChangeEventMap(map.getChangeEvents());

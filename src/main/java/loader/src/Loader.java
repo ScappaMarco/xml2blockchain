@@ -74,8 +74,9 @@ public class Loader {
         System.out.println();
         System.out.println(Ansi.ansi().bold().fgBrightGreen().a("TIME RECORD - BLOCKCHAIN TIME: " + (savingEnd - savingStart) + "ms (milliseconds)").reset());
         System.out.println();
-        /*
+
         System.out.println();
+        String modelName = "contract-" + changeEventsMap.toString().hashCode();
         System.out.println(Ansi.ansi().bold().a("-----BLOCKCHAIN BLOCK READING-----").reset());
         if(changeEventsMap.getChangeEvents().size() == 1) {
             System.out.println("\t - The model contains only 1 entry");
@@ -90,7 +91,7 @@ public class Loader {
             if(returnMap != null) {
                 System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block has been taken").reset());
                 System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
-                //System.out.println(eventBlockList);
+                //System.out.println(returnMap);
             } else {
                 System.out.println(Ansi.ansi().bgRed().a("ERROR: event list null").reset());
             }
@@ -107,21 +108,18 @@ public class Loader {
                 returnMap = blockChainService.getBlock("block" + (blockChoice));
                 if (returnMap != null) {
                     if(returnMap.isEmpty()) {
-                        System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been stored in \"eventBlockList\"" ).reset());
+                        System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been stored in \"returnMap\"" ).reset());
                         return;
                     }
-                    System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been stored in \"eventBlockList\"" ).reset());
-                    /*
-                    System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
-                    System.out.println(eventBlockList);
+                    System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been stored in \"returnMap\"" ).reset());
 
+                    System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
+                    //System.out.println(returnMap);
 
                 } else {
                     System.out.println(Ansi.ansi().fgBrightRed().a("ERROR: event list null").reset());
                 }
             }
-
         }
-         */
     }
 }
