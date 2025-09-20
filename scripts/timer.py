@@ -1,10 +1,11 @@
-import pandas
+import pandas as pd
 import statistics
 import subprocess
 import re
+import matplotlib.pyplot as plt
 
 def run_java_benchmark(contact_name, runs):
-    print("IN THE METHOD")
+    #print("IN THE METHOD")
     """
     Esegue il benchmark per un contratto specifico
     :param contact_name:
@@ -20,10 +21,10 @@ def run_java_benchmark(contact_name, runs):
         bc_saving_times = []
         general_times = []
 
-        print("AT THE START OF THE FOR LOOP")
+        #print("AT THE START OF THE FOR LOOP")
         for i in range(runs):
             print("IN THE FOR LOOP")
-            print(f"ATTENSTION: starting run number {i}")
+            print(f"ATTENTION: starting run number {i+1}")
             result = subprocess.run(cmd, capture_output=True, text=True)
             if result.returncode != 0:
                 print(f"ERROR - PARSING TIME: errore occurred running {contact_name}: {result.stderr}")
@@ -54,6 +55,7 @@ def run_java_benchmark(contact_name, runs):
                                 general_times.append(int(general_time.group(1)))
 
         means = {
+            "contract type": contact_name,
             "parsing mean value": statistics.mean(parsing_times) if parsing_times else None,
             "serialization mean value": statistics.mean(serializing_times) if serializing_times else None,
             "blockchain saving mean time": statistics.mean(bc_saving_times) if bc_saving_times else None,
@@ -67,6 +69,7 @@ def run_java_benchmark(contact_name, runs):
 
 def main():
     contracts = ["block-contract-dc", "block-contract"]
+    #TODO add block-contract to contracts list
     res = []
 
     for contract in contracts:
@@ -74,7 +77,38 @@ def main():
 
         results = run_java_benchmark(contract, 5)
         if results:
+            print(f"CONTRACT {contract} DONE")
+            print(results)
             res.append(results)
+    print(res)
+    visualize(res)
+
+def visualize(result_dict):
+    df = pd.DataFrame(result_dict)
+    df = df.set_index("contract type")
+    print(df)
+
+    for column in df.columns:
+        plt.figure()
+        df[column].plot(kind="bar", stacked=True)
+        plt.ylabel(f"{column} ms")
+        plt.xlabel("contract type")
+        plt.xticks(rotation=20)
+        plt.tight_layout()
+        plt.show()
+
+    for idx, row in df.iterrows():
+        plt.figure()
+        values = [
+            row["parsing mean value"],
+            row["serialization mean value"],
+            row["blockchain saving mean time"]
+        ]
+        labels = ["Parsing", "Serialization", "Blockchain saving"]
+
+        plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
+        plt.title(f"Composition of general time for {idx}")
+        plt.show()
 
 if __name__ == "__main__":
     main()
