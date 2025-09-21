@@ -90,7 +90,7 @@ public class BlockChainServiceImpl implements BlockChainService {
 
     @Override
     public Map<StartNewSessionEvent, List<ChangeEvent>> getBlock(String blockId) {
-        List<ChangeEvent> resultArrayList = null;
+        //List<ChangeEvent> resultArrayList = null;
         ObjectMapper mapper = JacksonConfig.getMapper();
 
         try {
@@ -142,6 +142,44 @@ public class BlockChainServiceImpl implements BlockChainService {
 
         return resultArrayList;
              */
+        } catch (IOException | ContractException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Map<StartNewSessionEvent, List<ChangeEvent>> getFisrtBlock() {
+        ObjectMapper mapper = JacksonConfig.getMapper();
+
+        try {
+            Contract contract = this.fabricConnect("../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml");
+            byte[] resultByteArray = contract.evaluateTransaction("ReadBlock", "block1");
+
+            if(resultByteArray == null || resultByteArray.length == 0) {
+                throw new RuntimeException("ERROR: no block found fot this ID: block1");
+            }
+
+            String compressedStringData = new String(resultByteArray);
+            byte[] compressedBytes = Base64.getDecoder().decode(compressedStringData);
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(compressedBytes);
+            GZIPInputStream gzipInputStream = new GZIPInputStream(bais);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while((len = gzipInputStream.read(buffer)) > 0) {
+                baos.write(buffer, 0, len);
+            }
+            gzipInputStream.close();
+
+            String json = baos.toString("UTF-8");
+            //System.out.println("BC JSON: " + json);
+            //System.out.println("\t - BLOCK DATA: this is the data of the specified Block: " + json);
+
+            ChangeEventsMap map = mapper.readValue(json, ChangeEventsMap.class);
+            return map.getChangeEvents();
+
         } catch (IOException | ContractException e) {
             throw new RuntimeException(e);
         }
