@@ -20,6 +20,7 @@ def run_java_benchmark(contact_name, runs):
         serializing_times = []
         bc_saving_times = []
         general_times = []
+        deserialization_times = []
 
         #print("AT THE START OF THE FOR LOOP")
         for i in range(runs):
@@ -34,32 +35,37 @@ def run_java_benchmark(contact_name, runs):
                 for line in result.stdout.splitlines():
                     if "TIME RECORD - PARSING TIME" in line:
                         parsing_time = re.search(r'(\d+)ms', line)
-                        print(f"FOUND A PARSING TIME LINE - {parsing_time}")
+                        print(f"FOUND A PARSING TIME RECORD - {parsing_time}")
                         if parsing_time:
                             parsing_times.append(int(parsing_time.group(1)))
                     elif "TIME RECORD - SERIALIZATION TIME" in line:
                         serialization_time = re.search(r'(\d+)ms', line)
-                        print(f"FOUND A SERIALIZATION TIME LINE - {serialization_time}")
+                        print(f"FOUND A SERIALIZATION TIME RECORD - {serialization_time}")
                         if serialization_time:
                             serializing_times.append(int(serialization_time.group(1)))
                     elif "TIME RECORD - BLOCKCHAIN TIME" in line:
                         blockchain_time = re.search(r'(\d+)ms', line)
-                        print(f"FOUND A BLOCKCHAIN SAVING TIME LINE - {blockchain_time}")
+                        print(f"FOUND A BLOCKCHAIN SAVING TIME RECORD - {blockchain_time}")
                         if blockchain_time:
                             bc_saving_times.append(int(blockchain_time.group(1)))
+                    elif "TIME RECORD - GENERAL TIME" in line:
+                        general_time = re.search(r'(\d+)ms', line)
+                        print(f"FOUND A GENARAL TIME RECORD - {general_time}")
+                        if general_time:
+                            general_times.append(int(general_time.group(1)))
                     else:
-                        if "TIME RECORD - GENERAL TIME" in line:
-                            general_time = re.search(r'(\d+)ms', line)
-                            print(f"FOUND A GENARAL TIME LINE - {general_time}")
-                            if general_time:
-                                general_times.append(int(general_time.group(1)))
-
+                        if "TIME RECORD - DESERIALIZATION TIME" in line:
+                            deserialization_time = re.search(r'(\d+)ms', line)
+                            print(f"FOUND A DESERIALIZATION TIME RECORD - {deserialization_time}")
+                            if deserialization_time:
+                                deserialization_times.append(int(deserialization_time.group(1)))
         means = {
             "contract type": contact_name,
             "parsing mean value": statistics.mean(parsing_times) if parsing_times else None,
             "serialization mean value": statistics.mean(serializing_times) if serializing_times else None,
             "blockchain saving mean time": statistics.mean(bc_saving_times) if bc_saving_times else None,
             "general mean time": statistics.mean(general_times) if general_times else None
+            "deserialization mean time": statistics.mean(deserialization_times) if deserialization_times else None
         }
 
         return means
@@ -102,9 +108,10 @@ def visualize(result_dict):
         values = [
             row["parsing mean value"],
             row["serialization mean value"],
-            row["blockchain saving mean time"]
+            row["blockchain saving mean time"],
+            row["deserialization mean time"]
         ]
-        labels = ["Parsing", "Serialization", "Blockchain saving"]
+        labels = ["Parsing", "Serialization", "Blockchain saving", "Deserialization"]
 
         plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
         plt.title(f"Composition of general time for {idx}")
