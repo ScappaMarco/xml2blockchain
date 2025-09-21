@@ -90,7 +90,7 @@ public class Loader {
             deserializationEnd = System.currentTimeMillis();
 
             System.out.println();
-            System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - DESERIALIZATION TIME: " + (deserializationEnd - deserializationStart) + "ms (milliseconds"));
+            System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - DESERIALIZATION TIME: " + (deserializationEnd - deserializationStart) + "ms (milliseconds)").reset());
             System.out.println();
         }
         if(returnMap != null) {
