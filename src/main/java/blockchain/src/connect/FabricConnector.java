@@ -25,6 +25,11 @@ public class FabricConnector {
 
         Path networkConfigPath = Paths.get(networkConfigString);
 
+        System.out.println("Current working directory: " + System.getProperty("user.dir"));
+        System.out.println("Network config file exists: " + networkConfigPath.toFile().exists());
+        System.out.println("Wallet directory exists: " + walletPath.toFile().exists());
+        System.out.println("Network config absolute path: " + networkConfigPath.toAbsolutePath());
+
         System.out.println();
         System.out.println(Ansi.ansi().bold().a("-----CONNECTION DEBUG DATA-----").reset());
         System.out.println("\t - DEBUG: connection profile absolute path: " + networkConfigPath.toAbsolutePath());
