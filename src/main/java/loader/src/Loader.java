@@ -36,7 +36,8 @@ public class Loader {
 
     private static void cbp2map() throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
         NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2.cbpxml"));
-        System.out.println("Computing...");
+        System.out.println("Starting...");
+        System.out.println(Ansi.ansi().bold().a("-----PARSING-----").reset());
         long parsingStart = System.currentTimeMillis();
         ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
         long parsingEnd = System.currentTimeMillis();
@@ -64,7 +65,7 @@ public class Loader {
         Scanner scanner = new Scanner(System.in);
         BlockChainServiceImpl blockChainService = new BlockChainServiceFactory().createService();
         //List<ChangeEvent> eventBlockList = null;
-        Map<StartNewSessionEvent, List<ChangeEvent>> returnMap;
+        Map<StartNewSessionEvent, List<ChangeEvent>> returnMap = null;
 
         long savingStart = System.currentTimeMillis();
         System.out.println(Ansi.ansi().bold().a("-----SAVING IN BLOCKCHAIN-----").reset());
@@ -78,11 +79,29 @@ public class Loader {
         System.out.println();
         String modelName = "contract-" + changeEventsMap.toString().hashCode();
         System.out.println(Ansi.ansi().bold().a("-----BLOCKCHAIN BLOCK READING-----").reset());
+
+        long deserializationStart;
+        long deserializationEnd;
+
+        System.out.println("\t - READING: we are going to read the first block: block1");
+        if(returnMap == null) {
+            deserializationStart = System.currentTimeMillis();
+            returnMap = blockChainService.getFisrtBlock();
+            deserializationEnd = System.currentTimeMillis();
+
+            System.out.println();
+            System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - DESERIALIZATION TIME: " + (deserializationEnd - deserializationStart) + "ms (milliseconds"));
+            System.out.println();
+        }
+        if(returnMap != null) {
+            System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID \"block1\" has been stored in \"returnMap\"" ).reset());
+        }
+        /*
         if(changeEventsMap.getChangeEvents().size() == 1) {
             System.out.println("\t - The model contains only 1 entry");
-            long deserializationStart = System.currentTimeMillis();
+            deserializationStart = System.currentTimeMillis();
             returnMap = blockChainService.getBlock("block1");
-            long deserializationEnd = System.currentTimeMillis();
+            deserializationEnd = System.currentTimeMillis();
 
             System.out.println();
             System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - DESERIALIZATION TIME: " + (deserializationEnd - deserializationStart) + "ms (milliseconds"));
@@ -90,7 +109,7 @@ public class Loader {
 
             if(returnMap != null) {
                 System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block has been taken").reset());
-                System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
+                //System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
                 //System.out.println(returnMap);
             } else {
                 System.out.println(Ansi.ansi().bgRed().a("ERROR: event list null").reset());
@@ -105,21 +124,25 @@ public class Loader {
             if (blockChoice < 0 || blockChoice > changeEventsMap.getChangeEvents().size()) {
                 System.out.println(Ansi.ansi().fgBrightRed().a("ILLEGAL ARGUMENT: the Block ID has to be in the range 1 to " + (changeEventsMap.getChangeEvents().size())).reset());
             } else {
+                deserializationStart = System.currentTimeMillis();
                 returnMap = blockChainService.getBlock("block" + (blockChoice));
+                deserializationEnd = System.currentTimeMillis();
+
+                System.out.println();
+                System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - DESERIALIZATION TIME: " + (deserializationEnd - deserializationStart) + "ms (milliseconds"));
+                System.out.println();
+
                 if (returnMap != null) {
-                    if(returnMap.isEmpty()) {
-                        System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been stored in \"returnMap\"" ).reset());
-                        return;
-                    }
                     System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID " + (blockChoice) + " has been stored in \"returnMap\"" ).reset());
 
-                    System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
+                    //System.out.println("\t - CHANGE EVENT LIST: this is the list of event(s) stored in the data of the Block");
                     //System.out.println(returnMap);
 
                 } else {
-                    System.out.println(Ansi.ansi().fgBrightRed().a("ERROR: event list null").reset());
+                    System.out.println(Ansi.ansi().fgBrightRed().a("ERROR: event map null").reset());
                 }
             }
         }
+        */
     }
 }
