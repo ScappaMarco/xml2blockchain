@@ -5,6 +5,7 @@ import blockchain.src.BlockChainServiceImpl;
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
 import cbp.src.event.StartNewSessionEvent;
+import cbp.src.resource.CBPResource;
 import cbp.src.resource.CBPXMLResourceFactory;
 import cbp.src.resource.NewCBPXMLResourceImpl;
 import org.eclipse.emf.common.util.URI;
@@ -96,6 +97,16 @@ public class Loader {
         if(returnMap != null) {
             System.out.println(Ansi.ansi().fgBrightGreen().a("\t - SUCCESS: The data of the Block with the ID \"block1\" has been stored in \"returnMap\"" ).reset());
         }
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource();
+        System.out.println();
+        System.out.println(Ansi.ansi().bold().a("-----WRITING-----").reset());
+        long writingStart = System.currentTimeMillis();
+        cbpxmlResource.writeCBPXML(returnMap, "block1");
+        long writingEnd = System.currentTimeMillis();
+
+        System.out.println();
+        System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - FILE WRITING TIME: "  + (writingEnd - writingStart) + "ms (milliseconds)").reset());
+        System.out.println();
         /*
         if(changeEventsMap.getChangeEvents().size() == 1) {
             System.out.println("\t - The model contains only 1 entry");

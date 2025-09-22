@@ -2,19 +2,29 @@ package cbp.src.resource;
 
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.*;
+import metamodel.src.cbp.*;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
+import org.fusesource.jansi.Ansi;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.*;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class NewCBPXMLResourceImpl extends CBPResource {
@@ -135,6 +145,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     this.geteObjectMap().put(id, clazz);
                                     clazz.setName(className);
                                     event = new CreateEObjectEvent(clazz, this, id);
+                                    ((CreateEObjectEvent) event).setePackage(packageName);
                                 }
                                 break;
                                 case "add-to-resource": {
@@ -237,7 +248,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     eventino9.setTarget(this.geteObjectMap().get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino9.setName(e.getAttributeByName(new QName("name")).getValue());
                                     eventino9.setFromPosition(Integer.parseInt(e.getAttributeByName(new QName("from")).getValue()));
-                                    eventino9.setToPosition(Integer.parseInt(e.getAttributeByName(new QName("target")).getValue()));
+                                    eventino9.setPosition(Integer.parseInt(e.getAttributeByName(new QName("to")).getValue()));
                                     eventino9.setTargetId(e.getAttributeByName(new QName("target")).getValue());
 
                                     this.setValueId(eventino9, xmlEventReader, "move-in-eattribute", "literal");
@@ -249,7 +260,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     eventino10.setTarget(this.geteObjectMap().get(e.getAttributeByName(new QName("target")).getValue().toString()));
                                     eventino10.setName(e.getAttributeByName(new QName("name")).getValue());
                                     eventino10.setFromPosition(Integer.parseInt(e.getAttributeByName(new QName("from")).getValue()));
-                                    eventino10.setToPosition(Integer.parseInt(e.getAttributeByName(new QName("to")).getValue()));
+                                    eventino10.setPosition(Integer.parseInt(e.getAttributeByName(new QName("to")).getValue()));
                                     eventino10.setTargetId(e.getAttributeByName(new QName("target")).getValue());
 
                                     this.setValueId(eventino10, xmlEventReader, "move-in-ereference", "eobject");
@@ -263,6 +274,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     errorMessage = errorMessage + ", package: " + packageName + ", class: " + className + ", id: " + id;
                                     EClass eClass = this.geteObjectMap().get(id);
                                     event = new DeleteEObjectEvent(eClass, this, id);
+                                    ((DeleteEObjectEvent) event).setePackage(packageName);
                                 }
                                 break;
                             }
@@ -328,6 +340,182 @@ public class NewCBPXMLResourceImpl extends CBPResource {
         }
     }
 
+    @Override
+    public void writeCBPXML(Map<StartNewSessionEvent, List<ChangeEvent>> changeEventMap, String sessionId) {
+        Path path = Paths.get("./src/main/java/saveResults/" + sessionId + ".cbpxml");
+        if(Files.exists(path)) {
+            System.out.println(Ansi.ansi().fgBrightYellow().a("\t - WARNING: the file " + sessionId + ".cbpxml already exists - overwriting...").reset());
+        }
+        try (FileOutputStream fos = new FileOutputStream("./src/main/java/saveResults/" + sessionId + ".cbpxml")) {
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+
+            //Document sessionDocument = documentBuilder.newDocument();
+            //Element sessionElement = null;
+            //Element eventElement = null;
+
+            for (Map.Entry<StartNewSessionEvent, List<ChangeEvent>> entry : changeEventMap.entrySet()) {
+                if (entry.getKey() != null) {
+                    System.out.println("\t - WRITING: now writing the session");
+                    Document sessionDocument = documentBuilder.newDocument();
+                    Element sessionElement = null;
+
+                    StartNewSessionEvent session = entry.getKey();
+                    sessionElement = sessionDocument.createElement("session");
+                    sessionElement.setAttribute("id", session.getSessionId());
+                    sessionElement.setAttribute("time", session.getTime());
+
+                    if (sessionElement != null) {
+                        sessionDocument.appendChild(sessionElement);
+                    }
+                    transformer.transform(new DOMSource(sessionDocument), new StreamResult(fos));
+                    fos.write(System.lineSeparator().getBytes());
+                }
+                if (entry.getValue() != null && !(entry.getValue().isEmpty()) && !(entry.getValue().contains(null))) {
+                    System.out.println("\t - WRITING: now writing the event list");
+                    for (ChangeEvent event : entry.getValue()) {
+                        Document eventDocument = documentBuilder.newDocument();
+                        Element eventElement = null;
+                        if (event instanceof RegisterEPackageEvent) {
+                            RegisterEPackageEvent register = (RegisterEPackageEvent) event;
+                            eventElement = eventDocument.createElement("register");
+                            eventElement.setAttribute("epackage", register.getName());
+                        } else if (event instanceof CreateEObjectEvent) {
+                            CreateEObjectEvent create = (CreateEObjectEvent) event;
+                            eventElement = eventDocument.createElement("create");
+                            eventElement.setAttribute("eclass", ((CreateEObjectEvent) event).getEClass().getName());
+                            eventElement.setAttribute("epackage", ((CreateEObjectEvent) event).getePackage());
+                            eventElement.setAttribute("id", ((CreateEObjectEvent) event).getId());
+                            //EObject eObject = ((CreateEObjectEvent) event).getValue();
+                        } else if (event instanceof DeleteEObjectEvent) {
+                            DeleteEObjectEvent delete = (DeleteEObjectEvent) event;
+                            eventElement = eventDocument.createElement("delete");
+                            eventElement.setAttribute("eclass", ((DeleteEObjectEvent) event).getEClass().getName());
+                            eventElement.setAttribute("epackage", ((DeleteEObjectEvent) event).getePackage());
+                            eventElement.setAttribute("id", ((DeleteEObjectEvent) event).getId());
+                            //EObject eObject = ((DeleteEObjectEvent) event).getValue();
+                        } else if (event instanceof AddToResourceEvent) {
+                            AddToResourceEvent addToResourceEvent = (AddToResourceEvent) event;
+                            eventElement = eventDocument.createElement("add-to-resource");
+                            eventElement.setAttribute("position", String.valueOf(event.getPosition()));
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = ((AddToResourceEvent) event).getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof RemoveFromResourceEvent) {
+                            RemoveFromResourceEvent remove = (RemoveFromResourceEvent) event;
+                            eventElement = eventDocument.createElement("remove-from-resource");
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = ((RemoveFromResourceEvent) event).getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof AddToEReferenceEvent) {
+                            AddToEReferenceEvent addToEReferenceEvent = (AddToEReferenceEvent) event;
+                            eventElement = eventDocument.createElement("add-to-ereference");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("position", String.valueOf(event.getPosition()));
+                            eventElement.setAttribute("target", ((AddToEReferenceEvent) event).getTargetId());
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = ((AddToEReferenceEvent) event).getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof RemoveFromEReferenceEvent) {
+                            RemoveFromEReferenceEvent remove = (RemoveFromEReferenceEvent) event;
+                            eventElement = eventDocument.createElement("remove-from-ereference");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((RemoveFromEReferenceEvent) event).getTargetId());
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = ((RemoveFromEReferenceEvent) event).getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof SetEAttributeEvent) {
+                            SetEAttributeEvent setEAttributeEvent = (SetEAttributeEvent) event;
+                            eventElement = eventDocument.createElement("set-eattribute");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((SetEAttributeEvent) event).getTargetId());
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("literal", event.getValueId());
+                            //EObject eObject = ((SetEAttributeEvent) event).getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof SetEReferenceEvent) {
+                            SetEReferenceEvent setEReferenceEvent = (SetEReferenceEvent) event;
+                            eventElement = eventDocument.createElement("set-ereference");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((SetEReferenceEvent) event).getTargetId());
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = ((SetEReferenceEvent) event).getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof UnsetEReferenceEvent) {
+                            UnsetEReferenceEvent unsetEReferenceEvent = (UnsetEReferenceEvent) event;
+                            eventElement = eventDocument.createElement("unset-ereference");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((UnsetEReferenceEvent) event).getTargetId());
+                        } else if (event instanceof UnsetEAttributeEvent) {
+                            UnsetEAttributeEvent unsetEAttributeEvent = (UnsetEAttributeEvent) event;
+                            eventElement = eventDocument.createElement("unset-eattribute");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((UnsetEAttributeEvent) event).getTargetId());
+                        } else if (event instanceof AddToEAttributeEvent) {
+                            AddToEAttributeEvent addToEAttributeEvent = (AddToEAttributeEvent) event;
+                            eventElement = eventDocument.createElement("add-to-eattribute");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("position", String.valueOf(event.getPosition()));
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = event.getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof RemoveFromEAttributeEvent) {
+                            RemoveFromEAttributeEvent removeFromEAttributeEvent = (RemoveFromEAttributeEvent) event;
+                            eventElement = eventDocument.createElement("remove-from-eattribute");
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((RemoveFromEAttributeEvent) event).getTargetId());
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = event.getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof MoveWithinEReferenceEvent) {
+                            MoveWithinEReferenceEvent moveWithinEReferenceEvent = (MoveWithinEReferenceEvent) event;
+                            eventElement = eventDocument.createElement("move-in-ereference");
+                            eventElement.setAttribute("from", String.valueOf(((MoveWithinEReferenceEvent) event).getFromPosition()));
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((MoveWithinEReferenceEvent) event).getTargetId());
+                            eventElement.setAttribute("to", String.valueOf(event.getPosition()));
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = ((MoveWithinEReferenceEvent) event).getValue();
+                            eventElement.appendChild(value);
+                        } else if (event instanceof MoveWithinEAttributeEvent) {
+                            MoveWithinEAttributeEvent moveWithinEAttributeEvent = (MoveWithinEAttributeEvent) event;
+                            eventElement = eventDocument.createElement("move-in-eattribute");
+                            eventElement.setAttribute("from", String.valueOf(((MoveWithinEAttributeEvent) event).getFromPosition()));
+                            eventElement.setAttribute("name", event.getName());
+                            eventElement.setAttribute("target", ((MoveWithinEAttributeEvent) event).getTargetId());
+                            eventElement.setAttribute("to", String.valueOf(event.getPosition()));
+                            Element value = eventDocument.createElement("value");
+                            value.setAttribute("eobject", event.getValueId());
+                            //EObject eObject = event.getValue();
+                            eventElement.appendChild(value);
+                        } else {
+                            throw new RuntimeException("ERROR: unexpected event: " + event.getName());
+                        }
+                        if (eventElement != null) {
+                            eventDocument.appendChild(eventElement);
+                            transformer.transform(new DOMSource(eventDocument), new StreamResult(fos));
+                            fos.write(System.lineSeparator().getBytes());
+                        }
+                    }
+                } else {
+                    System.out.println("\t - WARNING: the event list is invalid");
+                }
+            }
+        } catch (ParserConfigurationException | IOException | TransformerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void setValueId(ChangeEvent event, XMLEventReader xmlEventReader, String eventName, String attName) throws XMLStreamException {
         while(xmlEventReader.hasNext()) {
             XMLEvent innerEvent = xmlEventReader.peek();
@@ -350,9 +538,4 @@ public class NewCBPXMLResourceImpl extends CBPResource {
             }
         }
     }
-
-    private void addToDeleteSet(InputStream inputStream) {
-
-    }
-
 }

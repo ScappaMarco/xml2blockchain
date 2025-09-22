@@ -2,10 +2,9 @@ package cbp.src.event;
 
 import org.eclipse.emf.common.util.EList;
 
-public class MoveWithinEAttributeEvent extends MultiValueEAttributeEvent implements FromPositionEvent, ToPosition {
+public class MoveWithinEAttributeEvent extends MultiValueEAttributeEvent implements FromPositionEvent {
 
     private int fromPosition;
-    private int toPosition;
 
     @Override
     public int getFromPosition() {
@@ -15,16 +14,6 @@ public class MoveWithinEAttributeEvent extends MultiValueEAttributeEvent impleme
     @Override
     public void setFromPosition(int position) {
         this.fromPosition = position;
-    }
-
-    @Override
-    public int getToPosition() {
-        return this.toPosition;
-    }
-
-    @Override
-    public void setToPosition(int toPosition) {
-        this.toPosition = toPosition;
     }
 
     @SuppressWarnings("unchecked")

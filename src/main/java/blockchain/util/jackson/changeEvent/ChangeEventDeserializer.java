@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.checkerframework.checker.units.qual.C;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
@@ -86,6 +87,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                             eObjectMap.put(id, eclass);
                             eclass.setName(className);
                             event = new CreateEObjectEvent(eclass, id);
+                            ((CreateEObjectEvent) event).setePackage(ePackageName);
                         }
                         break;
 
@@ -263,7 +265,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
 
                             JsonNode toNode = eNode.get("to");
                             if(toNode != null) {
-                                ev11.setToPosition(toNode.asInt());
+                                ev11.setPosition(toNode.asInt());
                             }
 
                             JsonNode targetNode = eNode.get("target-id");
@@ -291,7 +293,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
 
                             JsonNode toNode = eNode.get("to");
                             if(toNode != null) {
-                                ev12.setToPosition(toNode.asInt());
+                                ev12.setPosition(toNode.asInt());
                             }
 
                             JsonNode targetNode = eNode.get("target-id");
@@ -312,6 +314,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                             String id = eNode.get("id").asText();
                             EClass eClass = eObjectMap.get(id);
                             event = new DeleteEObjectEvent(eClass, new NewCBPXMLResourceImpl(), id);
+                            ((DeleteEObjectEvent) event).setePackage(eNode.get("epackage").asText());
                         }
                         break;
 

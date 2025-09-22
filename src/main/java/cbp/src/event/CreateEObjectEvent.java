@@ -40,7 +40,7 @@ public class CreateEObjectEvent extends EObjectEvent {
     }
 
     public EClass getEClass() {
-        return eClass;
+        return this.eClass;
     }
 
     public String getId() {

@@ -3,10 +3,9 @@ package cbp.src.event;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
-public class MoveWithinEReferenceEvent extends MultiValueEReferenceEvent implements FromPositionEvent, ToPosition, EObjectValuesEvent{
+public class MoveWithinEReferenceEvent extends MultiValueEReferenceEvent implements FromPositionEvent, EObjectValuesEvent{
 
     private int fromPosition;
-    private int toPosition;
 
     @Override
     public int getFromPosition() {
@@ -16,16 +15,6 @@ public class MoveWithinEReferenceEvent extends MultiValueEReferenceEvent impleme
     @Override
     public void setFromPosition(int position) {
         this.fromPosition = position;
-    }
-
-    @Override
-    public int getToPosition() {
-        return this.toPosition;
-    }
-
-    @Override
-    public void setToPosition(int toPosition) {
-        this.toPosition = toPosition;
     }
 
     @SuppressWarnings("unchecked")

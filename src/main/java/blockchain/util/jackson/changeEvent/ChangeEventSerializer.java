@@ -106,7 +106,7 @@ public class ChangeEventSerializer extends JsonSerializer<ChangeEvent> {
             gen.writeStringField("target-class", ((MoveWithinEReferenceEvent) event).getTarget().eClass().getName());
             gen.writeStringField("target-id", ((MoveWithinEReferenceEvent) event).getTargetId());
             gen.writeNumberField("from", ((MoveWithinEReferenceEvent) event).getFromPosition());
-            gen.writeNumberField("to", ((MoveWithinEReferenceEvent) event).getToPosition());
+            gen.writeNumberField("to", ((MoveWithinEReferenceEvent) event).getPosition());
             gen.writeStringField("value", event.getValueId());
         } else if(event instanceof MoveWithinEAttributeEvent) {
             //System.out.println("serializing a Move in Attribute");
@@ -115,13 +115,14 @@ public class ChangeEventSerializer extends JsonSerializer<ChangeEvent> {
             gen.writeStringField("target-class", ((MoveWithinEAttributeEvent) event).getTarget().eClass().getName());
             gen.writeStringField("target-id", ((MoveWithinEAttributeEvent) event).getTargetId());
             gen.writeNumberField("from", ((MoveWithinEAttributeEvent) event).getFromPosition());
-            gen.writeNumberField("to", ((MoveWithinEAttributeEvent) event).getToPosition());
+            gen.writeNumberField("to", ((MoveWithinEAttributeEvent) event).getPosition());
             gen.writeStringField("value", event.getValueId());
         } else if(event instanceof DeleteEObjectEvent) {
             //System.out.println("serializing a Delete");
             gen.writeStringField("type", "delete");
             gen.writeStringField("id", ((DeleteEObjectEvent) event).getId());
             gen.writeStringField("eclass", ((DeleteEObjectEvent) event).getEClass().getName());
+            gen.writeStringField("epackage", ((DeleteEObjectEvent) event).getePackage());
             //NOTE: the eClass of the delete will be the eClass of the corresponding EObject (by the id attribute)
         }
         gen.writeEndObject();

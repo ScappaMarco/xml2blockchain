@@ -15,4 +15,8 @@ public class CBPXMLResourceFactory extends ResourceFactoryImpl {
             throw new RuntimeException("Unknown extension. Could not create resource for URI " + uri);
         }
     }
+
+    public Resource createResource() {
+        return new NewCBPXMLResourceImpl();
+    }
 }

@@ -21,6 +21,7 @@ def run_java_benchmark(contact_name, runs):
         bc_saving_times = []
         general_times = []
         deserialization_times = []
+        file_writing_times = []
 
         #print("AT THE START OF THE FOR LOOP")
         for i in range(runs):
@@ -53,18 +54,25 @@ def run_java_benchmark(contact_name, runs):
                         print(f"FOUND A GENARAL TIME RECORD - {general_time}")
                         if general_time:
                             general_times.append(int(general_time.group(1)))
+                    elif "TIME RECORD - DESERIALIZATION TIME" in line:
+                        deserialization_time = re.search(r'(\d+)ms', line)
+                        print(f"FOUND A DESERIALIZATION TIME RECORD - {deserialization_time}")
+                        if deserialization_time:
+                            deserialization_times.append(int(deserialization_time.group(1)))
                     else:
-                        if "TIME RECORD - DESERIALIZATION TIME" in line:
-                            deserialization_time = re.search(r'(\d+)ms', line)
-                            print(f"FOUND A DESERIALIZATION TIME RECORD - {deserialization_time}")
-                            if deserialization_time:
-                                deserialization_times.append(int(deserialization_time.group(1)))
+                        if "TIME RECORD - FILE WRITING TIME" in line:
+                            file_writing_time = re.search(r'(\d+)ms', line)
+                            print(f"FOUND A FILE WRITING TIME RECORD - {file_writing_time}")
+                            if file_writing_time:
+                                file_writing_times.append(int(file_writing_time.group(1)))
+
         means = {
             "contract type": contact_name,
             "parsing mean value": statistics.mean(parsing_times) if parsing_times else None,
             "serialization mean value": statistics.mean(serializing_times) if serializing_times else None,
             "blockchain saving mean time": statistics.mean(bc_saving_times) if bc_saving_times else None,
             "deserialization mean time": statistics.mean(deserialization_times) if deserialization_times else None,
+            "writing mean time": statistics.mean(file_writing_times) if file_writing_times else None,
             "general mean time": statistics.mean(general_times) if general_times else None
         }
 
