@@ -72,7 +72,7 @@ def run_java_benchmark(contact_name, runs):
             "serialization mean value": statistics.mean(serializing_times) if serializing_times else None,
             "blockchain saving mean time": statistics.mean(bc_saving_times) if bc_saving_times else None,
             "deserialization mean time": statistics.mean(deserialization_times) if deserialization_times else None,
-            "writing mean time": statistics.mean(file_writing_times) if file_writing_times else None,
+            "file writing mean time": statistics.mean(file_writing_times) if file_writing_times else None,
             "general mean time": statistics.mean(general_times) if general_times else None
         }
 
@@ -117,9 +117,11 @@ def visualize(result_dict):
             row["parsing mean value"],
             row["serialization mean value"],
             row["deserialization mean time"],
-            row["blockchain saving mean time"]
+            row["blockchain saving mean time"],
+            row["file writing mean time"]
+
         ]
-        labels = ["Parsing", "Serialization", "Blockchain saving", "Deserialization"]
+        labels = ["Parsing", "Serialization", "Blockchain saving", "Deserialization", "File writing"]
 
         plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
         plt.title(f"Composition of general time for {idx}")
