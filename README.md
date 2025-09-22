@@ -27,5 +27,9 @@ Each one of the two chaincodes has been created using the "_deployCC_" as it fol
 - **-ccp**: this flag is used to specify where we defined the code of the chaincode.
 - **-ccl**: this flag is used to specify the language with which we defined the chaincode. In our case, the chaincode is defined in JavaScript
 
-## Timing
-Using the file timer.py (https://github.com/ScappaMarco/xml2blockchain/blob/main/scripts/timer.py) we visualized the mean time of some of the main subprocesses in the project: particularly we measured **Parsing time**, **Serialization time**, **BlockChain saving time** and **General time** with and without the **_Duplicate block checker_**.
+## Experimentation
+### Timing
+Using the file timer.py (https://github.com/ScappaMarco/xml2blockchain/blob/main/scripts/timer.py) we visualized the mean time of some of the main subprocesses in the project: particularly we measured **Parsing time**, **Serialization time**, **BlockChain saving time**, **Deserialization time** and **General time** with and without the **_Duplicate block checker_**.
+
+### Power usage
+We used the JoularJx tool (https://github.com/joular/joularjx) to measure and monitor the power usage of our project. The measure can be done uploading the .jar file of the project and than the tool returns the total power usage, and some other statistics about the project.

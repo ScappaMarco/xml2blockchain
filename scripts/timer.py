@@ -64,8 +64,8 @@ def run_java_benchmark(contact_name, runs):
             "parsing mean value": statistics.mean(parsing_times) if parsing_times else None,
             "serialization mean value": statistics.mean(serializing_times) if serializing_times else None,
             "blockchain saving mean time": statistics.mean(bc_saving_times) if bc_saving_times else None,
+            "deserialization mean time": statistics.mean(deserialization_times) if deserialization_times else None,
             "general mean time": statistics.mean(general_times) if general_times else None
-            "deserialization mean time": statistics.mean(deserialization_times) if deserialization_times else None
         }
 
         return means
@@ -108,8 +108,8 @@ def visualize(result_dict):
         values = [
             row["parsing mean value"],
             row["serialization mean value"],
-            row["blockchain saving mean time"],
-            row["deserialization mean time"]
+            row["deserialization mean time"],
+            row["blockchain saving mean time"]
         ]
         labels = ["Parsing", "Serialization", "Blockchain saving", "Deserialization"]
 
