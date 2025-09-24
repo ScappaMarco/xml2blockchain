@@ -5,7 +5,6 @@ import blockchain.src.BlockChainServiceImpl;
 import cbp.src.dto.ChangeEventsMap;
 import cbp.src.event.ChangeEvent;
 import cbp.src.event.StartNewSessionEvent;
-import cbp.src.resource.CBPResource;
 import cbp.src.resource.CBPXMLResourceFactory;
 import cbp.src.resource.NewCBPXMLResourceImpl;
 import org.eclipse.emf.common.util.URI;
@@ -23,6 +22,10 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Loader {
+    private static long encodingTimeStart;
+    private static long encodingTimeEnd;
+    private static long decodingTimeStart;
+    private static long decodingTimeEnd;
 
     public static void main(String[] args) throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
         long generalStart = System.currentTimeMillis();
@@ -32,6 +35,8 @@ public class Loader {
 
         System.out.println();
         System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - GENERAL TIME: " + (generalEnd - generalStart) + "ms (milliseconds)").reset());
+        System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - ENCODING TIME: " + (encodingTimeEnd - encodingTimeStart) + "ms (milliseconds)").reset());
+        System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - DECODING TIME: " + (decodingTimeEnd - decodingTimeStart) + "ms (milliseconds)").reset());
         System.out.println();
     }
 
@@ -40,6 +45,7 @@ public class Loader {
         System.out.println("Starting...");
         System.out.println(Ansi.ansi().bold().a("-----PARSING-----").reset());
         long parsingStart = System.currentTimeMillis();
+        encodingTimeStart = System.currentTimeMillis();
         ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
         long parsingEnd = System.currentTimeMillis();
 
@@ -71,6 +77,8 @@ public class Loader {
         long savingStart = System.currentTimeMillis();
         System.out.println(Ansi.ansi().bold().a("-----SAVING IN BLOCKCHAIN-----").reset());
         blockChainService.saveModelToBlockchain(changeEventsMap);
+
+        encodingTimeEnd = System.currentTimeMillis();
         long savingEnd = System.currentTimeMillis();
 
         System.out.println();
@@ -87,7 +95,8 @@ public class Loader {
         System.out.println("\t - READING: we are going to read the first block: block1");
         if(returnMap == null) {
             deserializationStart = System.currentTimeMillis();
-            returnMap = blockChainService.getFisrtBlock();
+            decodingTimeStart = System.currentTimeMillis();
+            returnMap = blockChainService.getBlock("block14");
             deserializationEnd = System.currentTimeMillis();
 
             System.out.println();
@@ -103,6 +112,7 @@ public class Loader {
         long writingStart = System.currentTimeMillis();
         cbpxmlResource.writeCBPXML(returnMap, "block1");
         long writingEnd = System.currentTimeMillis();
+        decodingTimeEnd = System.currentTimeMillis();
 
         System.out.println();
         System.out.println(Ansi.ansi().fgBrightGreen().bold().a("TIME RECORD - FILE WRITING TIME: "  + (writingEnd - writingStart) + "ms (milliseconds)").reset());

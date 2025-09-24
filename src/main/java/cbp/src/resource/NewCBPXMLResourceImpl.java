@@ -275,6 +275,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     EClass eClass = this.geteObjectMap().get(id);
                                     event = new DeleteEObjectEvent(eClass, this, id);
                                     ((DeleteEObjectEvent) event).setePackage(packageName);
+                                    ((DeleteEObjectEvent) event).setEClass(eClass);
                                 }
                                 break;
                             }

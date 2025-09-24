@@ -53,11 +53,7 @@ public class DeleteEObjectEvent extends EObjectEvent {
         return id;
     }
 
-    public EClass geteClass() {
-        return eClass;
-    }
-
-    public void seteClass(EClass eClass) {
+    public void setEClass(EClass eClass) {
         this.eClass = eClass;
     }
 
@@ -69,11 +65,11 @@ public class DeleteEObjectEvent extends EObjectEvent {
         this.resource = resource;
     }
 
-    public EObject geteObject() {
+    public EObject getEObject() {
         return eObject;
     }
 
-    public void seteObject(EObject eObject) {
+    public void setEObject(EObject eObject) {
         this.eObject = eObject;
     }
 

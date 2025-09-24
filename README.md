@@ -9,6 +9,9 @@ To import and use all those libraries we used Apache Maven (https://maven.apache
 
 _All the paths in the project are written as relative paths_
 
+### Chunk-Division operations
+What if the block to add to the BlockChain is too big? To prevent issues we implemented a chunk based division of the Block data: whenever the (serialized) block exceeds a certain size, we split the block data in some chunks. Each one of them stores a portion of the original data. Then, this data is reassembled and deserialized, if it is needed to be read.
+
 ## Blockchain specification
 For the two main Blockchain operations (Saving all sessions, and getting the data form a specified block) we wrote a custom ChainCode in JavaScript (https://github.com/ScappaMarco/xml2blockchain/blob/main/src/main/java/blockchain/chaicode.js) to define custom operations:
 - **CreateBlock**: this operation take as arguments the **blockId** and the **JSONdata**: this data are all the events in the sessions serialized as JSON
@@ -21,7 +24,7 @@ The design of the BlockChain has been defined in the BlockChainService directory
 - **Non-Duplicate checker**: in this configuration, the chaincode allows everything to enter the blockchain. So, every transaction is not checked before being pushed inside the chaincode. This configuration is obviously slower than the previous one, since writing in the chaincode requires more time than just checking the existence.<br>
 ---
 Which one of the configuration is in use, is ruled by the "_FabricConnector_" (https://github.com/ScappaMarco/xml2blockchain/blob/main/src/main/java/blockchain/src/connect/FabricConnector.java). This file has a variable named "_CONTRACT_NAME_": by the value of this variable depends which one the chaincode is being interrogated to use.
-Each one of the two chaincodes has been created using the "_deployCC_" as it follows: **./network.sh deployCC -ccn chaincode-name -ccv 1.0 -ccp /path/to/your/chaincode -ccl chaincode-specification-lenguage**,
+Each one of the two chaincodes has been created using the "_deployCC_" as it follows: **./network.sh deployCC -ccn chaincode-name -ccv 1.0 -ccp /path/to/your/chaincode -ccl chaincode-specification-language**,
 - **-ccn**: this flag is used to specify the name that we want to use when we are about to connect to the chaincode
 - **-ccv**: this flag is used to specify the version of the chaincode. This is useful if we want to upgrade the code of the chaincode, and in this cass we are going to re-deploy a 2.0 version
 - **-ccp**: this flag is used to specify where we defined the code of the chaincode.
@@ -32,4 +35,4 @@ Each one of the two chaincodes has been created using the "_deployCC_" as it fol
 Using the file timer.py (https://github.com/ScappaMarco/xml2blockchain/blob/main/scripts/timer.py) we visualized the mean time of some of the main subprocesses in the project: particularly we measured **Parsing time**, **Serialization time**, **BlockChain saving time**, **Deserialization time** and **General time** with and without the **_Duplicate block checker_**.
 
 ### Power usage
-We used the JoularJx tool (https://github.com/joular/joularjx) to measure and monitor the power usage of our project. The measure can be done uploading the .jar file of the project and than the tool returns the total power usage, and some other statistics about the project.
+We used the JoularJx tool (https://github.com/joular/joularjx) to measure and monitor the power usage of our project. The measure can be done uploading the .jar file of the project and then the tool returns the total power usage, and some other statistics about the project.

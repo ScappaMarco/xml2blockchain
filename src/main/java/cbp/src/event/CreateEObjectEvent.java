@@ -43,6 +43,8 @@ public class CreateEObjectEvent extends EObjectEvent {
         return this.eClass;
     }
 
+    public void seteClass(EClass eClass) { this.eClass = eClass; }
+
     public String getId() {
         return id;
     }

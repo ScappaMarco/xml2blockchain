@@ -88,6 +88,7 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
                             eclass.setName(className);
                             event = new CreateEObjectEvent(eclass, id);
                             ((CreateEObjectEvent) event).setePackage(ePackageName);
+                            ((CreateEObjectEvent) event).seteClass(eclass);
                         }
                         break;
 
@@ -312,9 +313,18 @@ public class ChangeEventDeserializer extends JsonDeserializer<ChangeEventsMap> {
 
                         case "delete": {
                             String id = eNode.get("id").asText();
-                            EClass eClass = eObjectMap.get(id);
-                            event = new DeleteEObjectEvent(eClass, new NewCBPXMLResourceImpl(), id);
+                            EClass eClass = null;
+                            if(eObjectMap.get(id) == null) {
+                                eClass = EcoreFactory.eINSTANCE.createEClass();
+                                //throw new RuntimeException("CREATED A NEW ECLASS-----------------");
+                            } else {
+                                eClass = eObjectMap.get(id);
+                                //throw new RuntimeException("ASSIGNED THE LOCAL ONE------------");
+                            }
+                            event = new DeleteEObjectEvent(eClass, id);
                             ((DeleteEObjectEvent) event).setePackage(eNode.get("epackage").asText());
+                            ((DeleteEObjectEvent) event).setEClass(eClass);
+                            ((DeleteEObjectEvent) event).getEClass().setName(eNode.get("eclass").asText());
                         }
                         break;
 
