@@ -343,11 +343,11 @@ public class NewCBPXMLResourceImpl extends CBPResource {
 
     @Override
     public void writeCBPXML(Map<StartNewSessionEvent, List<ChangeEvent>> changeEventMap, String sessionId) {
-        Path path = Paths.get("./src/main/java/saveResults/" + sessionId + ".cbpxml");
+        Path path = Paths.get("./src/main/java/saveResults/savedBlock.cbpxml");
         if(Files.exists(path)) {
-            System.out.println(Ansi.ansi().fgBrightYellow().a("\t - WARNING: the file " + sessionId + ".cbpxml already exists - overwriting...").reset());
+            System.out.println(Ansi.ansi().fgBrightYellow().a("\t - WARNING: the file \"savedBlock.cbpxml\" already exists - overwriting...").reset());
         }
-        try (FileOutputStream fos = new FileOutputStream("./src/main/java/saveResults/" + sessionId + ".cbpxml")) {
+        try (FileOutputStream fos = new FileOutputStream("./src/main/java/saveResults/savedBlock.cbpxml")) {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
