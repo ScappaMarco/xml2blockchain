@@ -91,6 +91,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
             );
             StartNewSessionEvent currentSession = null;
 
+            //int s = 0;
             while (xmlEventReader.hasNext()) {
                 event = null;
                 XMLEvent xmlEvent = xmlEventReader.nextEvent();
@@ -110,7 +111,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                 ignore = true;
                             }
                         }
-
+                        //int s = 0;
                         if(!(ignore)) {
                             errorMessage = name;
                             switch (name) {
@@ -119,7 +120,8 @@ public class NewCBPXMLResourceImpl extends CBPResource {
                                     String sessionTime = e.getAttributeByName(new QName("time")).getValue();
                                     event = new StartNewSessionEvent(sessionId, sessionTime);
                                     currentSession = (StartNewSessionEvent) event;
-                                    //System.out.println("Computing a session...");
+                                    //System.out.println("Computing a session..." + s);
+                                    //s++;
                                 }
                                 break;
                                 case "register": {
@@ -342,7 +344,7 @@ public class NewCBPXMLResourceImpl extends CBPResource {
     }
 
     @Override
-    public void writeCBPXML(Map<StartNewSessionEvent, List<ChangeEvent>> changeEventMap, String sessionId) {
+    public void writeCBPXML(Map<StartNewSessionEvent, List<ChangeEvent>> changeEventMap) {
         Path path = Paths.get("./src/main/java/saveResults/savedBlock.cbpxml");
         if(Files.exists(path)) {
             System.out.println(Ansi.ansi().fgBrightYellow().a("\t - WARNING: the file \"savedBlock.cbpxml\" already exists - overwriting...").reset());

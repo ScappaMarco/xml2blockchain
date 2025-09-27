@@ -41,12 +41,12 @@ public class Loader {
     }
 
     private static void cbp2map() throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
-        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("BPMN2.cbpxml"));
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("wikipedia.9316.cbpxml"));
         System.out.println("Starting...");
         System.out.println(Ansi.ansi().bold().a("-----PARSING-----").reset());
         long parsingStart = System.currentTimeMillis();
         encodingTimeStart = System.currentTimeMillis();
-        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("BPMN2.cbpxml")));
+        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("wikipedia.9316.cbpxml")));
         long parsingEnd = System.currentTimeMillis();
 
         System.out.println();
@@ -65,7 +65,7 @@ public class Loader {
         }
 
          */
-        mapInBlockchain(changeEventsMap);
+        //mapInBlockchain(changeEventsMap);
     }
 
     public static void mapInBlockchain(ChangeEventsMap changeEventsMap) throws CertificateException, IOException, InvalidKeyException {
@@ -96,7 +96,7 @@ public class Loader {
         if(returnMap == null) {
             deserializationStart = System.currentTimeMillis();
             decodingTimeStart = System.currentTimeMillis();
-            returnMap = blockChainService.getBlock("block14");
+            returnMap = blockChainService.getBlock("block1");
             deserializationEnd = System.currentTimeMillis();
 
             System.out.println();
@@ -110,7 +110,7 @@ public class Loader {
         System.out.println();
         System.out.println(Ansi.ansi().bold().a("-----WRITING-----").reset());
         long writingStart = System.currentTimeMillis();
-        cbpxmlResource.writeCBPXML(returnMap, "block1");
+        cbpxmlResource.writeCBPXML(returnMap);
         long writingEnd = System.currentTimeMillis();
         decodingTimeEnd = System.currentTimeMillis();
 

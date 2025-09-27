@@ -51,7 +51,7 @@ public class BlockChainServiceImpl implements BlockChainService {
             long serializationEnd = System.currentTimeMillis();
 
             System.out.println();
-            System.out.println(Ansi.ansi().bold().fgBrightGreen().a("TIME RECORD - SERIALIZATION TIME: " + (serializationEnd - serializationStart) + "ms (milliseconds").reset());
+            System.out.println(Ansi.ansi().bold().fgBrightGreen().a("TIME RECORD - SERIALIZATION TIME: " + (serializationEnd - serializationStart) + "ms (milliseconds)").reset());
             System.out.println();
 
             int i = 1;
@@ -68,7 +68,7 @@ public class BlockChainServiceImpl implements BlockChainService {
                 gzipOutputStream.close();
 
                 String compressedData = Base64.getEncoder().encodeToString(baos.toByteArray());
-                System.out.println("LENGHT aaaaaaaaaaaaaaaaa: " + compressedData.length());
+                //System.out.println("LENGHT aaaaaaaaaaaaaaaaa: " + compressedData.length());
                 if(compressedData.length() > 2000000) {
                     System.out.println(Ansi.ansi().bgBrightYellow().fgBlack().bold().a("\t - WARNING: the Block with the ID \"block " + i + "\" is going to be split into chunks due to his dimensions").reset());
                     this.saveChunkedBlock(contract, "block" + (i), compressedData);

@@ -331,5 +331,5 @@ public abstract class CBPResource extends ResourceImpl {
 
     public abstract ChangeEventsMap replayEvents(InputStream inputStream) throws FactoryConfigurationError, IOException;
 
-    public abstract void writeCBPXML(Map<StartNewSessionEvent, List<ChangeEvent>> changeEventMap, String sessionId);
+    public abstract void writeCBPXML(Map<StartNewSessionEvent, List<ChangeEvent>> changeEventMap);
 }
