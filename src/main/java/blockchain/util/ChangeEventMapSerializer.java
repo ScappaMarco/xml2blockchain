@@ -19,6 +19,7 @@ public class ChangeEventMapSerializer {
         ObjectMapper mapper = JacksonConfig.getMapper();
         String serializedChangeEvent = null;
         Map<String, Object> wrapper = new HashMap<>();
+        long eventNumber = 0;
 
         for(Map.Entry<StartNewSessionEvent, List<ChangeEvent>> entry : eventListMap.entrySet()) {
             try {
@@ -29,6 +30,7 @@ public class ChangeEventMapSerializer {
                         System.out.println("\t TRYING TO SERIALIZE: ");
                         System.out.println("\t - SESSION ID: " + entry.getKey().getSessionId());
                         System.out.println("\t - EVENT LIST SIZE: " + entry.getValue().size());
+                        eventNumber = eventNumber + entry.getValue().size();
                         serializedChangeEvent = mapper.writeValueAsString(wrapper);
                     } else {
                         System.out.println("\t TRYING TO SERIALIZE: ");
@@ -40,7 +42,7 @@ public class ChangeEventMapSerializer {
                     }
                 }
                 /*
-                System.out.println(Ansi.ansi().fgBlack().bgBrightGreen().a("\t SERIALIAZED CHANGE EVENTS: " + serializedChangeEvent).reset());
+                System.out.println(Ansi.ansi().fgBlack().bgBrightGreen().a("\t SERIALIZED CHANGE EVENTS: " + serializedChangeEvent).reset());
                  */
                 if(serializedChangeEvent != null) {
                     result.add(serializedChangeEvent);
@@ -49,6 +51,7 @@ public class ChangeEventMapSerializer {
                 throw new RuntimeException("ERROR: Change Event serializing error: " + entry.getKey().getSessionId());
             }
         }
+        System.out.println(Ansi.ansi().fgBlue().bold().a("TOTAL EVENTS NUMBER: " + FormatterUtil.formatNumber(eventNumber) + " events").reset());
         return result;
     }
 }

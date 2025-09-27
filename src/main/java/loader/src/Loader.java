@@ -41,12 +41,12 @@ public class Loader {
     }
 
     private static void cbp2map() throws FactoryConfigurationError, IOException, CertificateException, InvalidKeyException {
-        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("wikipedia.9316.cbpxml"));
+        NewCBPXMLResourceImpl cbpxmlResource = (NewCBPXMLResourceImpl) new CBPXMLResourceFactory().createResource(URI.createFileURI("epsilon.1842.cbpxml"));
         System.out.println("Starting...");
         System.out.println(Ansi.ansi().bold().a("-----PARSING-----").reset());
         long parsingStart = System.currentTimeMillis();
         encodingTimeStart = System.currentTimeMillis();
-        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("wikipedia.9316.cbpxml")));
+        ChangeEventsMap changeEventsMap = cbpxmlResource.replayEvents(new FileInputStream(new File("epsilon.1842.cbpxml")));
         long parsingEnd = System.currentTimeMillis();
 
         System.out.println();
@@ -65,7 +65,7 @@ public class Loader {
         }
 
          */
-        //mapInBlockchain(changeEventsMap);
+        mapInBlockchain(changeEventsMap);
     }
 
     public static void mapInBlockchain(ChangeEventsMap changeEventsMap) throws CertificateException, IOException, InvalidKeyException {
